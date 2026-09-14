@@ -377,6 +377,21 @@
       opacity: 0.75;
     }
 
+    /* ── Note compatte su slide dense ── */
+    .pipeline-notes li { font-size: 0.82rem; line-height: 1.5; align-items: baseline; }
+    .pipeline-notes li::before { line-height: 1; position: relative; top: 0.12em; }
+    .pipeline-notes li strong { font-weight: 700; }
+
+    /* ── Code inline ── */
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.92em;
+      background: rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 0.05em 0.35em;
+    }
+    .light code { background: var(--acn-lilac); color: var(--acn-purple-dark); }
+
     /* ── Nav ── */
     .slide-nav {
       position: fixed;
@@ -482,11 +497,9 @@
     <ol class="agenda-list">
       <li><span class="num">01</span> Il problema &amp; la persona</li>
       <li><span class="num">02</span> La soluzione CarePath</li>
-      <li><span class="num">03</span> Demo — percorso guidato</li>
-      <li><span class="num">04</span> Architettura tecnica</li>
-      <li><span class="num">05</span> Pipeline agentica</li>
-      <li><span class="num">06</span> Autonomia &amp; limiti</li>
-      <li><span class="num">07</span> Prossimi passi</li>
+      <li><span class="num">03</span> Architettura tecnica</li>
+      <li><span class="num">04</span> Pipeline agentica</li>
+      <li><span class="num">05</span> Prossimi passi</li>
     </ol>
 
     <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
@@ -579,84 +592,41 @@
   </section>
 
 
-  <!-- ══════════════════════════════════════
-       SLIDE 5 — DEMO PERCORSO GUIDATO
-  ══════════════════════════════════════ -->
-  <section class="slide light">
-    <div class="accent-bar"></div>
-    <p class="slide-eyebrow">03 — Demo</p>
-    <h2 class="slide-title">Prima e dopo</h2>
-
-    <div class="two-col" style="gap:2rem; max-width:95%;">
-      <div>
-        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:#999; margin-bottom:1rem;">Prima — Portale CUP</p>
-        <div style="background:#f5f5f5; border-radius:10px; padding:1.2rem; font-size:0.82rem; line-height:1.7; color:#444; border:1px solid #e0e0e0;">
-          <div style="background:#e8e8e8; height:20px; border-radius:4px; margin-bottom:0.8rem;"></div>
-          <p><strong>Numero NRE *</strong></p>
-          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0 0.8rem; font-size:0.78rem; color:#bbb;">000XXXXXXXXXXXXXXX</div>
-          <p><strong>Branca specialistica *</strong></p>
-          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0 0.8rem; font-size:0.78rem; color:#bbb;">Seleziona branca...</div>
-          <p><strong>Classe di priorità *</strong></p>
-          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0; font-size:0.78rem; color:#bbb;">U / B / D / P</div>
-          <div style="background:#c00; color:#fff; border-radius:4px; padding:0.3rem 0.6rem; margin-top:0.8rem; font-size:0.75rem;">Sessione scaduta. Ricominciare.</div>
-        </div>
-      </div>
-      <div>
-        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:var(--acn-purple); margin-bottom:1rem;">Dopo — CarePath</p>
-        <div style="background:var(--acn-lilac); border-radius:10px; padding:1.2rem; font-size:0.82rem; line-height:1.7; color:var(--acn-ink); border:2px solid var(--acn-lavender);">
-          <p style="font-size:0.78rem; color:var(--acn-purple-mid); font-weight:600; margin-bottom:0.6rem;">📷 Ricetta riconosciuta</p>
-          <div style="background:#fff; border-radius:6px; padding:0.7rem; margin-bottom:0.8rem; font-size:0.78rem;">
-            <strong>Visita:</strong> Cardiologia<br>
-            <strong>Priorità:</strong> Breve (entro 10 giorni)<br>
-            <strong>Struttura più vicina:</strong> Ospedale San Giovanni
-          </div>
-          <p style="font-size:0.82rem; font-weight:600; margin-bottom:0.4rem;">Scegli una data:</p>
-          <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-            <div style="background:var(--acn-purple);color:#fff;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem; font-weight:600;">Lun 18 mar</div>
-            <div style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">Mar 19 mar</div>
-            <div style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">Ven 22 mar</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
-      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
-      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
-    </svg>
-  </section>
 
 
-  <!-- ══════════════════════════════════════
-       SLIDE 6 — ARCHITETTURA TECNICA
-  ══════════════════════════════════════ -->
+  <!-- ══════════════════════
+       SLIDE 5 — ARCHITETTURA TECNICA
+  ══════════════════════ -->
   <section class="slide dark">
     <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
     </svg>
-
     <div class="accent-bar"></div>
-    <p class="slide-eyebrow">04 — Architettura tecnica</p>
-    <h2 class="slide-title" style="max-width:60%;">Stack &amp; componenti</h2>
+    <p class="slide-eyebrow">03 &mdash; Architettura tecnica</p>
+    <h2 class="slide-title" style="max-width:70%; font-size:clamp(1.6rem,3.2vw,2.6rem);">Tutto sul telefono di Anna,<br>zero rete in uscita</h2>
 
-    <div class="card-row" style="max-width:92%;">
+    <div class="card-row" style="max-width:94%; margin-top:1.4rem;">
       <div class="card">
-        <div class="card-label">Frontend</div>
-        <div class="card-text">React + Bootstrap Italia<br>Design system PA italiana<br>Mobile-first, accessibilità WCAG AA</div>
+        <div class="card-label">Front-end</div>
+        <div class="card-text">React 18 + TypeScript + Vite<br>Bootstrap Italia 2.x via design-react-kit<br>Nessun componente UI inventato</div>
       </div>
       <div class="card">
-        <div class="card-label">AI / Vision</div>
-        <div class="card-text">Claude Vision (Anthropic)<br>OCR ricetta cartacea<br>Estrazione NRE · Branca · Priorità</div>
+        <div class="card-label">Lettura ricetta</div>
+        <div class="card-text">Due motori <strong>in locale</strong>, nel browser:<br>ZXing / <code>BarcodeDetector</code> sul Code 39 &rarr; NRE<br>Tesseract.js <code>ita</code> sul testo &rarr; prestazione, priorit&agrave;, esenzione</div>
       </div>
       <div class="card">
-        <div class="card-label">Backend</div>
-        <div class="card-text">Node.js · API layer<br>Integrazione CUP (mock realistico)<br>Nessun dato sanitario in chiaro</div>
+        <div class="card-label">Runtime</div>
+        <div class="card-text"><strong>Nessun backend</strong>, sito statico<br>CSP che vieta il traffico in uscita: la foto non pu&ograve; partire<br>Demo che non dipende dalla rete</div>
       </div>
       <div class="card">
-        <div class="card-label">Guardrail</div>
-        <div class="card-text">Solo navigazione e prenotazione<br>Zero diagnosi · Zero consigli clinici<br>Dati citati verbatim dalla ricetta</div>
+        <div class="card-label">Dominio &amp; dati</div>
+        <div class="card-text">Confidenza come tipo: campo incerto non compilabile per costruzione<br>Prenotazione simulata dietro interfaccia<br>Dizionario dei termini statico e versionato</div>
       </div>
     </div>
+
+    <p style="margin-top:1.6rem; font-size:0.8rem; opacity:0.65; max-width:90%;">
+      10 ADR arbitrano le scelte a rischio &mdash; motori di lettura, soglie di confidenza, contratti dei tipi, servizio di prenotazione, fedelt&agrave; della replica del CUP. Test con Vitest + Testing Library, i file <code>.feature</code> sono la sorgente di verit&agrave;.
+    </p>
 
     <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
       <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
@@ -666,16 +636,16 @@
 
 
   <!-- ══════════════════════════════════════
-       SLIDE 7 — PIPELINE AGENTICA
+       SLIDE 6 — PIPELINE AGENTICA
   ══════════════════════════════════════ -->
-  <section class="slide dark-gradient">
+  <section class="slide dark-gradient" style="padding:4% 6%;">
     <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
     </svg>
 
     <div class="accent-bar"></div>
-    <p class="slide-eyebrow">05 — Pipeline agentica</p>
-    <h2 class="slide-title" style="max-width:65%;">Il codice scritto da 6 agenti AI in 5 ore</h2>
+    <p class="slide-eyebrow">04 — Pipeline agentica</p>
+    <h2 class="slide-title" style="max-width:70%; font-size:clamp(1.5rem,3vw,2.4rem); margin-bottom:0.6rem;">Il codice scritto da 7 agenti AI in 5 ore</h2>
 
     <div class="pipeline-row">
       <div class="pipe-chip">REQ<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Opus · PRD</span></div>
@@ -695,11 +665,34 @@
       <div class="pipe-chip gate">GATE 3</div>
     </div>
 
-    <ul class="slide-list" style="margin-top:1.8rem;">
-      <li>Ogni agente ha <strong>doppia modalità</strong>: PRODUCE il proprio deliverable e REVIEW a quello altrui</li>
-      <li>Tre gate con peer review automatica; all'umano arrivano <strong>solo i conflitti reali</strong></li>
-      <li>Gli scenari Gherkin (BDD) fungono da test, specifica e storyboard della demo</li>
-      <li>Il campo <code style="background:rgba(255,255,255,0.1);padding:0.1rem 0.4rem;border-radius:4px;">Origine:</code> nei commit traccia dove ha contribuito l'AI e dove è servita revisione umana</li>
+    <div class="card-row" style="margin-top:1.6rem; gap:1.2rem; max-width:95%;">
+      <div class="card" style="padding:1rem 1.2rem;">
+        <div class="card-label">7 subagenti</div>
+        <div class="card-text" style="font-size:0.78rem; line-height:1.45;">Definizioni eseguibili in <code>.claude/agents/</code>. Contesto condiviso spezzato in <code>_shared-context.md</code> (il metodo, invariante) e <code>_case.md</code> (persona, barriera, guardrail): gli agenti descrivono mestieri, non il caso d'uso.</div>
+      </div>
+      <div class="card" style="padding:1rem 1.2rem;">
+        <div class="card-label">Routing dei modelli</div>
+        <div class="card-text" style="font-size:0.78rem; line-height:1.45;"><strong>Opus</strong> dove l'errore &egrave; strutturale e costoso a valle (REQ, ARCH, moderatore). <strong>Sonnet</strong> dove il lavoro &egrave; gi&agrave; vincolato dai documenti a monte (UX, PLAN, BUILD, issue).</div>
+      </div>
+      <div class="card" style="padding:1rem 1.2rem;">
+        <div class="card-label">Skill di progetto</div>
+        <div class="card-text" style="font-size:0.78rem; line-height:1.45;">
+          <strong>/commit</strong> &mdash; messaggi strutturati (fase, deliverable, requisiti, gate, origine) leggibili da un LLM a distanza di tempo<br>
+          <strong>/sync</strong> &mdash; pull con stash automatico e merge risolto sul significato del lavoro parallelo, non sulle righe<br>
+          <strong>/generate-presentation</strong> &mdash; deck dai deliverable<br>
+          <strong>/review-agentic-pipelines</strong> &mdash; audit avversariale della pipeline stessa
+        </div>
+      </div>
+      <div class="card" style="padding:1rem 1.2rem;">
+        <div class="card-label">Qualit&agrave; &amp; manutenzione</div>
+        <div class="card-text" style="font-size:0.78rem; line-height:1.45;">Doppia modalit&agrave; PRODUCE / REVIEW con auto-critica avversariale prima della consegna. Rilievi classificati BLOCCANTE / IMPORTANTE / MINORE. <code>issue-agent</code>: issue &rsaquo; test &rsaquo; fix &rsaquo; PR, senza merge autonomo.</div>
+      </div>
+    </div>
+
+    <ul class="slide-list pipeline-notes" style="margin-top:1.3rem; max-width:97%; gap:0.55rem;">
+      <li>Tre gate con party review automatica fra pari: il moderatore scarta le convergenze e porta all'umano <strong>solo i conflitti reali</strong>. Gli esiti finiscono nel registro dei gate.</li>
+      <li>BDD end-to-end: gli scenari Gherkin in italiano scritti in fase UX sono insieme test, specifica e storyboard della demo &mdash; BUILD procede scenario &rsaquo; test &rsaquo; codice.</li>
+      <li>Le scelte strutturali (vision provider, fallback, booking, dati) sono arbitrate con <strong>ADR</strong>, mai implicite nel codice; il campo <code>Origine:</code> nei commit traccia AI vs. revisione umana.</li>
     </ul>
 
     <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
@@ -710,52 +703,7 @@
 
 
   <!-- ══════════════════════════════════════
-       SLIDE 8 — AUTONOMIA & LIMITI
-  ══════════════════════════════════════ -->
-  <section class="slide light">
-    <div class="accent-bar"></div>
-    <p class="slide-eyebrow">06 — Autonomia &amp; limiti</p>
-    <h2 class="slide-title">Semplificare senza tradire</h2>
-
-    <div class="two-col">
-      <div>
-        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:var(--acn-purple); margin-bottom:1rem;">Cosa guadagna Anna</p>
-        <ul class="slide-list" style="margin-top:0; max-width:100%;">
-          <li>Legge la ricetta senza dover trascrivere nulla</li>
-          <li>Completa la prenotazione in autonomia, senza aiuto di familiari</li>
-          <li>Riceve un riepilogo in linguaggio semplice (data, luogo, costo ticket)</li>
-          <li>Non perde la sessione per timeout nascosti</li>
-        </ul>
-        <div style="margin-top:1.5rem;">
-          <div class="guardrail-badge">⛔ No diagnosi</div>&nbsp;
-          <div class="guardrail-badge">⛔ No triage clinico</div>&nbsp;
-          <div class="guardrail-badge">⛔ No dati sanitari in chiaro</div>
-        </div>
-      </div>
-      <div>
-        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:#999; margin-bottom:1rem;">Cosa resta fuori perimetro</p>
-        <ul class="slide-list" style="margin-top:0; max-width:100%;">
-          <li>Ricette in formato digitale (QR-code FSE): non supportate in MVP</li>
-          <li>Strutture senza API CUP pubblica: percorso di fallback manuale</li>
-          <li>Contenuti clinici — sempre citati verbatim dalla ricetta, mai interpretati</li>
-          <li>Accessibilità per ipovedenti: roadmap post-MVP (screen reader, contrasto avanzato)</li>
-        </ul>
-        <p style="margin-top:1.2rem; font-size:0.8rem; color:#777; font-style:italic;">
-          Dove l'AI ha contribuito: estrazione dati, semplificazione copy, routing CUP.<br>
-          Dove è servita revisione umana: guardrail clinici, scelte architetturali.
-        </p>
-      </div>
-    </div>
-
-    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
-      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
-      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
-    </svg>
-  </section>
-
-
-  <!-- ══════════════════════════════════════
-       SLIDE 9 — CLOSING
+       SLIDE 7 — CLOSING
   ══════════════════════════════════════ -->
   <section class="slide dark-gradient">
     <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
@@ -763,7 +711,7 @@
     </svg>
 
     <div class="accent-bar"></div>
-    <p class="slide-eyebrow">07 — Prossimi passi</p>
+    <p class="slide-eyebrow">05 — Prossimi passi</p>
     <h2 class="slide-title" style="max-width:70%;">Anna prenota.<br>L'autonomia digitale è un diritto.</h2>
 
     <div class="card-row" style="margin-top: 2.5rem;">
@@ -797,7 +745,7 @@
 <!-- Navigation -->
 <nav class="slide-nav">
   <button id="prev" aria-label="Diapositiva precedente">&#8592;</button>
-  <span id="counter">1 / 9</span>
+  <span id="counter">1 / 7</span>
   <button id="next" aria-label="Diapositiva successiva">&#8594;</button>
 </nav>
 <div class="key-hint">← → Frecce · Spazio</div>
