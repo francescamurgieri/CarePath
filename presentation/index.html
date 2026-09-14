@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePath — Hagenthon 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --acn-purple:      #A100FF;
+      --acn-purple-mid:  #7500C0;
+      --acn-purple-dark: #460073;
+      --acn-ink:         #0A0014;
+      --acn-rose:        #FF50A0;
+      --acn-cyan:        #05F2DB;
+      --acn-blue:        #224BFF;
+      --acn-lavender:    #C2A3FF;
+      --acn-lilac:       #E6DCFF;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body { font-family: var(--font); background: #111; overflow: hidden; }
+
+    /* ── Deck ── */
+    .deck { width: 100vw; height: 100vh; position: relative; }
+
+    /* ── Slide base ── */
+    .slide {
+      position: absolute; inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6% 8%;
+      overflow: hidden;
+    }
+    .slide.active { display: flex; }
+
+    /* ── Layouts ── */
+    .slide.dark-gradient {
+      background: linear-gradient(135deg, #0A0014 0%, #460073 55%, #7500C0 100%);
+      color: #fff;
+    }
+    .slide.dark {
+      background: #0A0014;
+      color: #fff;
+    }
+    .slide.purple {
+      background: var(--acn-purple);
+      color: #fff;
+    }
+    .slide.light {
+      background: #fff;
+      color: var(--acn-ink);
+    }
+
+    /* ── Tipografia ── */
+    .slide-eyebrow {
+      font-size: clamp(0.65rem, 1vw, 0.85rem);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 1.2rem;
+    }
+    .slide-title {
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 1.4rem;
+      max-width: 70%;
+    }
+    .slide-subtitle {
+      font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 60%;
+      opacity: 0.9;
+    }
+    .slide-body {
+      font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+      line-height: 1.7;
+      max-width: 80%;
+    }
+
+    /* ── Accent bar (sopra il titolo) ── */
+    .accent-bar {
+      width: 48px; height: 4px;
+      background: var(--acn-rose);
+      border-radius: 2px;
+      margin-bottom: 1.6rem;
+    }
+    .purple .accent-bar, .dark-gradient .accent-bar { background: var(--acn-cyan); }
+    .dark .accent-bar { background: var(--acn-purple); }
+
+    /* ── Cards / colonne ── */
+    .card-row {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .card {
+      flex: 1 1 180px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+    }
+    .light .card {
+      background: var(--acn-lilac);
+      color: var(--acn-ink);
+    }
+    .card-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--acn-rose);
+      margin-bottom: 0.4rem;
+    }
+    .purple .card-number, .dark-gradient .card-number { color: var(--acn-cyan); }
+    .dark .card-number { color: var(--acn-lavender); }
+    .light .card-number { color: var(--acn-purple); }
+    .card-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .card-text { font-size: 0.88rem; line-height: 1.5; opacity: 0.85; }
+
+    /* ── Liste ── */
+    .slide-list {
+      list-style: none;
+      margin-top: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-width: 75%;
+    }
+    .slide-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      font-size: clamp(0.85rem, 1.4vw, 1rem);
+      line-height: 1.5;
+    }
+    .slide-list li::before {
+      content: '›';
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--acn-rose);
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+    .dark .slide-list li::before,
+    .dark-gradient .slide-list li::before { color: var(--acn-cyan); }
+    .purple .slide-list li::before { color: var(--acn-cyan); }
+    .light .slide-list li::before { color: var(--acn-purple); }
+
+    /* ── Agenda ── */
+    .agenda-list {
+      list-style: none;
+      margin-top: 1.8rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 3rem;
+      max-width: 80%;
+    }
+    .agenda-list li {
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .agenda-list .num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--acn-lavender);
+      min-width: 2rem;
+      text-align: right;
+    }
+
+    /* ── Tag pill ── */
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.15);
+      color: inherit;
+      margin-bottom: 1rem;
+    }
+    .light .tag {
+      background: var(--acn-lilac);
+      color: var(--acn-purple-dark);
+    }
+
+    /* ── Two-col layout helper ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 1.8rem;
+      max-width: 92%;
+    }
+
+    /* ── Logo Accenture ── */
+    .acn-logo {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 3rem;
+      width: 110px;
+      height: auto;
+    }
+    .dark .acn-logo,
+    .dark-gradient .acn-logo,
+    .purple .acn-logo { color: #fff; }
+    .light .acn-logo { color: var(--acn-ink); }
+
+    /* ── Chevron ── */
+    .acn-chevron {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 340px;
+      height: auto;
+      pointer-events: none;
+    }
+    .dark-gradient .acn-chevron { color: #fff; }
+    .purple .acn-chevron { color: #fff; }
+    .dark .acn-chevron { color: var(--acn-purple); }
+    .light .acn-chevron { display: none; }
+
+    /* ── Quote block ── */
+    .quote-block {
+      border-left: 4px solid var(--acn-rose);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      font-style: italic;
+      line-height: 1.6;
+      opacity: 0.9;
+      max-width: 65%;
+    }
+    .dark .quote-block,
+    .dark-gradient .quote-block { border-color: var(--acn-cyan); }
+    .purple .quote-block { border-color: var(--acn-cyan); }
+    .light .quote-block { border-color: var(--acn-purple); }
+
+    /* ── Pipeline flow chips ── */
+    .pipeline-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .pipe-chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .pipe-chip.gate {
+      background: rgba(5,242,219,0.15);
+      border-color: var(--acn-cyan);
+      color: var(--acn-cyan);
+    }
+    .pipe-arrow { font-size: 1rem; opacity: 0.4; color: #fff; }
+    .light .pipe-chip { background: var(--acn-lilac); border-color: var(--acn-lavender); color: var(--acn-ink); }
+    .light .pipe-arrow { color: var(--acn-ink); opacity: 0.4; }
+
+    /* ── Guardrail badge ── */
+    .guardrail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(255,80,160,0.15);
+      color: var(--acn-rose);
+      border: 1px solid rgba(255,80,160,0.35);
+      border-radius: 6px;
+      padding: 0.3rem 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .light .guardrail-badge {
+      background: #fff0f6;
+      color: #b5006a;
+      border-color: #ffb3d5;
+    }
+
+    /* ── Highlight number ── */
+    .big-stat {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      color: var(--acn-rose);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .dark .big-stat,
+    .dark-gradient .big-stat { color: var(--acn-cyan); }
+    .purple .big-stat { color: #fff; }
+    .light .big-stat { color: var(--acn-purple); }
+    .big-stat-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+    }
+
+    /* ── Cover tagline large ── */
+    .cover-tagline {
+      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      font-weight: 300;
+      line-height: 1.5;
+      max-width: 56%;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Flow step ── */
+    .flow-steps {
+      display: flex;
+      gap: 0;
+      margin-top: 2rem;
+      max-width: 90%;
+    }
+    .flow-step {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border-radius: 0;
+      padding: 1.2rem 1.4rem;
+      position: relative;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .flow-step:first-child { border-radius: 12px 0 0 12px; }
+    .flow-step:last-child { border-radius: 0 12px 12px 0; border-right: none; }
+    .light .flow-step {
+      background: var(--acn-lilac);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .flow-step-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--acn-rose);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .light .flow-step-num { color: var(--acn-purple); }
+    .dark .flow-step-num,
+    .dark-gradient .flow-step-num,
+    .purple .flow-step-num { color: var(--acn-cyan); }
+    .flow-step-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .flow-step-desc {
+      font-size: 0.78rem;
+      line-height: 1.5;
+      opacity: 0.75;
+    }
+
+    /* ── Nav ── */
+    .slide-nav {
+      position: fixed;
+      bottom: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: rgba(10,0,20,0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      padding: 0.45rem 1.2rem;
+      z-index: 100;
+    }
+    .slide-nav button {
+      background: none; border: none; cursor: pointer;
+      color: #fff; font-size: 1.1rem; line-height: 1;
+      padding: 0.25rem 0.5rem;
+      border-radius: 50%;
+      transition: background 0.15s;
+      font-family: var(--font);
+    }
+    .slide-nav button:hover { background: rgba(255,255,255,0.15); }
+    #counter {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
+      min-width: 4rem;
+      text-align: center;
+      font-family: var(--font);
+    }
+
+    /* ── Keyboard hint ── */
+    .key-hint {
+      position: fixed; bottom: 1.6rem; right: 2rem;
+      color: rgba(255,255,255,0.22);
+      font-size: 0.66rem;
+      font-family: var(--font);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 — COVER
+  ══════════════════════════════════════ -->
+  <section class="slide dark-gradient active">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="tag">Hagenthon 2026 · Tema 01 — Accessibilità Digitale</div>
+
+    <h1 class="slide-title">CarePath</h1>
+
+    <p class="cover-tagline">
+      Un <em>accessibility layer</em> che affianca Anna nel prenotare<br>
+      la sua visita medica — dalla ricetta fotografata alla conferma<br>
+      di appuntamento, senza perdersi nei form del CUP.
+    </p>
+
+    <div class="card-row" style="margin-top:0; gap:3rem;">
+      <div>
+        <div class="big-stat">5h</div>
+        <div class="big-stat-label">di sviluppo</div>
+      </div>
+      <div>
+        <div class="big-stat">2</div>
+        <div class="big-stat-label">persone</div>
+      </div>
+      <div>
+        <div class="big-stat">6</div>
+        <div class="big-stat-label">agenti AI</div>
+      </div>
+    </div>
+
+    <!-- Logo -->
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 — AGENDA
+  ══════════════════════════════════════ -->
+  <section class="slide dark">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">Sommario</p>
+    <h2 class="slide-title">Agenda</h2>
+
+    <ol class="agenda-list">
+      <li><span class="num">01</span> Il problema &amp; la persona</li>
+      <li><span class="num">02</span> La soluzione CarePath</li>
+      <li><span class="num">03</span> Demo — percorso guidato</li>
+      <li><span class="num">04</span> Architettura tecnica</li>
+      <li><span class="num">05</span> Pipeline agentica</li>
+      <li><span class="num">06</span> Autonomia &amp; limiti</li>
+      <li><span class="num">07</span> Prossimi passi</li>
+    </ol>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 — PROBLEMA & PERSONA
+  ══════════════════════════════════════ -->
+  <section class="slide light">
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">01 — Il problema &amp; la persona</p>
+    <h2 class="slide-title">Anna, 74 anni,<br>non riesce a prenotare.</h2>
+
+    <div class="two-col">
+      <div>
+        <p class="slide-body" style="margin-bottom:1.2rem;">
+          Anna ha in mano una ricetta del medico di base. Deve prenotare una visita.<br>
+          Apre il portale CUP.
+        </p>
+        <div class="quote-block">
+          «NRE? Branca specialistica?<br>Classe di priorità P?<br>Struttura erogatrice?<br>Non so cosa significhi.»
+        </div>
+        <div class="guardrail-badge" style="margin-top:1rem;">
+          ⛔ Nessuna diagnosi — solo navigazione e prenotazione
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--acn-purple); margin-bottom:1rem;">Dove si blocca oggi</p>
+        <ul class="slide-list" style="margin-top:0; max-width:100%;">
+          <li>Il numero NRE (Numero Ricetta Elettronica) è nascosto nel PDF che non ha stampato</li>
+          <li>"Branca specialistica" richiede conoscenza del codice della branca</li>
+          <li>La classe di priorità (U / B / D / P) non è spiegata nel form</li>
+          <li>Le strutture eroogatrici sono elencate per codice, non per nome e distanza</li>
+          <li>L'errore di sessione la rimanda all'inizio senza spiegare perché</li>
+        </ul>
+      </div>
+    </div>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L24.7 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 — LA SOLUZIONE
+  ══════════════════════════════════════ -->
+  <section class="slide purple">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">02 — La soluzione</p>
+    <h2 class="slide-title">Fotografa la ricetta.<br>CarePath fa il resto.</h2>
+    <p class="slide-subtitle">L'AI legge, interpreta e guida Anna passo per passo — senza mai sostituire le informazioni originali.</p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-title">Scatta</div>
+        <div class="flow-step-desc">Anna fotografa la ricetta cartacea con il telefono</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-title">L'AI interpreta</div>
+        <div class="flow-step-desc">Vision OCR estrae NRE, branca, priorità in chiaro</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-title">Percorso guidato</div>
+        <div class="flow-step-desc">CarePath compila i campi CUP mostrando solo le scelte necessarie</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-title">Conferma chiara</div>
+        <div class="flow-step-desc">Data, luogo, costo: un riepilogo leggibile, senza gergo medico</div>
+      </div>
+    </div>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="rgba(255,255,255,0.6)"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 — DEMO PERCORSO GUIDATO
+  ══════════════════════════════════════ -->
+  <section class="slide light">
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">03 — Demo</p>
+    <h2 class="slide-title">Prima e dopo</h2>
+
+    <div class="two-col" style="gap:2rem; max-width:95%;">
+      <div>
+        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:#999; margin-bottom:1rem;">Prima — Portale CUP</p>
+        <div style="background:#f5f5f5; border-radius:10px; padding:1.2rem; font-size:0.82rem; line-height:1.7; color:#444; border:1px solid #e0e0e0;">
+          <div style="background:#e8e8e8; height:20px; border-radius:4px; margin-bottom:0.8rem;"></div>
+          <p><strong>Numero NRE *</strong></p>
+          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0 0.8rem; font-size:0.78rem; color:#bbb;">000XXXXXXXXXXXXXXX</div>
+          <p><strong>Branca specialistica *</strong></p>
+          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0 0.8rem; font-size:0.78rem; color:#bbb;">Seleziona branca...</div>
+          <p><strong>Classe di priorità *</strong></p>
+          <div style="background:#fff; border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.6rem; margin:0.3rem 0; font-size:0.78rem; color:#bbb;">U / B / D / P</div>
+          <div style="background:#c00; color:#fff; border-radius:4px; padding:0.3rem 0.6rem; margin-top:0.8rem; font-size:0.75rem;">Sessione scaduta. Ricominciare.</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:var(--acn-purple); margin-bottom:1rem;">Dopo — CarePath</p>
+        <div style="background:var(--acn-lilac); border-radius:10px; padding:1.2rem; font-size:0.82rem; line-height:1.7; color:var(--acn-ink); border:2px solid var(--acn-lavender);">
+          <p style="font-size:0.78rem; color:var(--acn-purple-mid); font-weight:600; margin-bottom:0.6rem;">📷 Ricetta riconosciuta</p>
+          <div style="background:#fff; border-radius:6px; padding:0.7rem; margin-bottom:0.8rem; font-size:0.78rem;">
+            <strong>Visita:</strong> Cardiologia<br>
+            <strong>Priorità:</strong> Breve (entro 10 giorni)<br>
+            <strong>Struttura più vicina:</strong> Ospedale San Giovanni
+          </div>
+          <p style="font-size:0.82rem; font-weight:600; margin-bottom:0.4rem;">Scegli una data:</p>
+          <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            <div style="background:var(--acn-purple);color:#fff;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem; font-weight:600;">Lun 18 mar</div>
+            <div style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">Mar 19 mar</div>
+            <div style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">Ven 22 mar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 — ARCHITETTURA TECNICA
+  ══════════════════════════════════════ -->
+  <section class="slide dark">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">04 — Architettura tecnica</p>
+    <h2 class="slide-title" style="max-width:60%;">Stack &amp; componenti</h2>
+
+    <div class="card-row" style="max-width:92%;">
+      <div class="card">
+        <div class="card-label">Frontend</div>
+        <div class="card-text">React + Bootstrap Italia<br>Design system PA italiana<br>Mobile-first, accessibilità WCAG AA</div>
+      </div>
+      <div class="card">
+        <div class="card-label">AI / Vision</div>
+        <div class="card-text">Claude Vision (Anthropic)<br>OCR ricetta cartacea<br>Estrazione NRE · Branca · Priorità</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Backend</div>
+        <div class="card-text">Node.js · API layer<br>Integrazione CUP (mock realistico)<br>Nessun dato sanitario in chiaro</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Guardrail</div>
+        <div class="card-text">Solo navigazione e prenotazione<br>Zero diagnosi · Zero consigli clinici<br>Dati citati verbatim dalla ricetta</div>
+      </div>
+    </div>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 7 — PIPELINE AGENTICA
+  ══════════════════════════════════════ -->
+  <section class="slide dark-gradient">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">05 — Pipeline agentica</p>
+    <h2 class="slide-title" style="max-width:65%;">Il codice scritto da 6 agenti AI in 5 ore</h2>
+
+    <div class="pipeline-row">
+      <div class="pipe-chip">REQ<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Opus · PRD</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip">UX<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Sonnet · spec+BDD</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip gate">GATE 1<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">party review</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip">ARCH<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Opus · ADR</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip">PLAN<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Sonnet · tasks</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip gate">GATE 2</div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip">BUILD<br><span style="font-weight:400;font-size:0.7rem;opacity:0.7;">Sonnet · BDD</span></div>
+      <span class="pipe-arrow">›</span>
+      <div class="pipe-chip gate">GATE 3</div>
+    </div>
+
+    <ul class="slide-list" style="margin-top:1.8rem;">
+      <li>Ogni agente ha <strong>doppia modalità</strong>: PRODUCE il proprio deliverable e REVIEW a quello altrui</li>
+      <li>Tre gate con peer review automatica; all'umano arrivano <strong>solo i conflitti reali</strong></li>
+      <li>Gli scenari Gherkin (BDD) fungono da test, specifica e storyboard della demo</li>
+      <li>Il campo <code style="background:rgba(255,255,255,0.1);padding:0.1rem 0.4rem;border-radius:4px;">Origine:</code> nei commit traccia dove ha contribuito l'AI e dove è servita revisione umana</li>
+    </ul>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 8 — AUTONOMIA & LIMITI
+  ══════════════════════════════════════ -->
+  <section class="slide light">
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">06 — Autonomia &amp; limiti</p>
+    <h2 class="slide-title">Semplificare senza tradire</h2>
+
+    <div class="two-col">
+      <div>
+        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:var(--acn-purple); margin-bottom:1rem;">Cosa guadagna Anna</p>
+        <ul class="slide-list" style="margin-top:0; max-width:100%;">
+          <li>Legge la ricetta senza dover trascrivere nulla</li>
+          <li>Completa la prenotazione in autonomia, senza aiuto di familiari</li>
+          <li>Riceve un riepilogo in linguaggio semplice (data, luogo, costo ticket)</li>
+          <li>Non perde la sessione per timeout nascosti</li>
+        </ul>
+        <div style="margin-top:1.5rem;">
+          <div class="guardrail-badge">⛔ No diagnosi</div>&nbsp;
+          <div class="guardrail-badge">⛔ No triage clinico</div>&nbsp;
+          <div class="guardrail-badge">⛔ No dati sanitari in chiaro</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; color:#999; margin-bottom:1rem;">Cosa resta fuori perimetro</p>
+        <ul class="slide-list" style="margin-top:0; max-width:100%;">
+          <li>Ricette in formato digitale (QR-code FSE): non supportate in MVP</li>
+          <li>Strutture senza API CUP pubblica: percorso di fallback manuale</li>
+          <li>Contenuti clinici — sempre citati verbatim dalla ricetta, mai interpretati</li>
+          <li>Accessibilità per ipovedenti: roadmap post-MVP (screen reader, contrasto avanzato)</li>
+        </ul>
+        <p style="margin-top:1.2rem; font-size:0.8rem; color:#777; font-style:italic;">
+          Dove l'AI ha contribuito: estrazione dati, semplificazione copy, routing CUP.<br>
+          Dove è servita revisione umana: guardrail clinici, scelte architetturali.
+        </p>
+      </div>
+    </div>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+
+  <!-- ══════════════════════════════════════
+       SLIDE 9 — CLOSING
+  ══════════════════════════════════════ -->
+  <section class="slide dark-gradient">
+    <svg class="acn-chevron" viewBox="0 0 328.04 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 360 328.04 226.999 328.04 133.001 0 0 0 93.9987 212.118 180 0 266.001Z" fill="currentColor" fill-opacity="0.12"/>
+    </svg>
+
+    <div class="accent-bar"></div>
+    <p class="slide-eyebrow">07 — Prossimi passi</p>
+    <h2 class="slide-title" style="max-width:70%;">Anna prenota.<br>L'autonomia digitale è un diritto.</h2>
+
+    <div class="card-row" style="margin-top: 2.5rem;">
+      <div class="card">
+        <div class="card-label">MVP completato</div>
+        <div class="card-text">Foto → OCR → percorso guidato → conferma. Scenari BDD coperti da test.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Post-MVP</div>
+        <div class="card-text">Ricette digitali QR, screen reader avanzato, multi-struttura, notifiche promemoria</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Scalabilità</div>
+        <div class="card-text">La pipeline agentica è riusabile per qualsiasi servizio digitale della PA</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 2.5rem; font-size: 0.78rem; opacity: 0.5; font-weight: 300;">
+      Hagenthon 2026 · Accenture Application Engineering ·
+      francesca.murgieri@accenture.com
+    </p>
+
+    <svg class="acn-logo" viewBox="0 0 163.2 43" xmlns="http://www.w3.org/2000/svg">
+      <path d="M95.1 12 104.5 8.5 95.1 4.9 95.1 0 111.2 6.5 111.2 10.5 95.1 17Z" fill="#A100FF"/>
+      <path d="M6.2 43C2.8 43 0 41.3 0 37.5L0 37.3C0 32.7 4 31.1 8.9 31.1L11.2 31.1 11.2 30.2C11.2 28.3 10.4 27.2 8.4 27.2 6.6 27.2 5.7 28.2 5.6 29.6L0.6 29.6C1 25.4 4.3 23.4 8.7 23.4 13.2 23.4 16.5 25.3 16.5 30L16.5 42.6 11.4 42.6 11.4 40.4C10.4 41.8 8.7 43 6.2 43ZM11.2 36.4 11.2 34.6 9.1 34.6C6.5 34.6 5.2 35.3 5.2 37L5.2 37.2C5.2 38.5 6 39.4 7.8 39.4 9.6 39.3 11.2 38.3 11.2 36.4ZM28.4 43C23.2 43 19.4 39.8 19.4 33.4L19.4 33.1C19.4 26.7 23.4 23.3 28.4 23.3 32.7 23.3 36.2 25.5 36.6 30.4L31.6 30.4C31.3 28.6 30.3 27.4 28.5 27.4 26.3 27.4 24.7 29.2 24.7 32.9L24.7 33.5C24.7 37.3 26.1 39 28.5 39 30.3 39 31.6 37.7 31.9 35.6L36.7 35.6C36.4 40 33.5 43 28.4 43ZM48 43C42.8 43 39 39.8 39 33.4L39 33.1C39 26.7 43 23.3 48 23.3 52.3 23.3 55.8 25.5 56.2 30.4L51.2 30.4C50.9 28.6 49.9 27.4 48.1 27.4 45.9 27.4 44.3 29.2 44.3 32.9L44.3 33.5C44.3 37.3 45.7 39 48.1 39 49.9 39 51.2 37.7 51.5 35.6L56.3 35.6C56 40 53.1 43 48 43ZM67.7 43C62.3 43 58.6 39.8 58.6 33.5L58.6 33.1C58.6 26.8 62.5 23.3 67.6 23.3 72.3 23.3 76.2 25.9 76.2 32.2L76.2 34.5 63.9 34.5C64.1 37.9 65.6 39.2 67.8 39.2 69.8 39.2 70.9 38.1 71.3 36.8L76.2 36.8C75.6 40.3 72.6 43 67.7 43ZM64 31 71 31C70.9 28.2 69.6 27 67.5 27 65.9 27.1 64.4 28 64 31ZM79.4 23.8 84.7 23.8 84.7 26.6C85.6 24.8 87.5 23.4 90.4 23.4 93.8 23.4 96.1 25.5 96.1 30L96.1 42.6 90.8 42.6 90.8 30.8C90.8 28.6 89.9 27.6 88 27.6 86.2 27.6 84.7 28.7 84.7 31.1L84.7 42.6 79.4 42.6 79.4 23.8ZM105.8 18.1 105.8 23.8 109.4 23.8 109.4 27.7 105.8 27.7 105.8 36.6C105.8 38 106.4 38.7 107.7 38.7 108.5 38.7 109 38.6 109.5 38.4L109.5 42.5C108.9 42.7 107.8 42.9 106.5 42.9 102.4 42.9 100.5 41 100.5 37.2L100.5 27.7 98.3 27.7 98.3 23.8 100.5 23.8 100.5 20.3 105.8 18.1ZM129.2 42.6 124 42.6 124 39.8C123.1 41.6 121.3 43 118.5 43 115.1 43 112.6 40.9 112.6 36.5L112.6 23.8 117.9 23.8 117.9 35.8C117.9 38 118.8 39 120.6 39 122.4 39 123.9 37.8 123.9 35.5L123.9 23.8 129.2 23.8 129.2 42.6ZM133.1 23.8 138.4 23.8 138.4 27.3C139.5 24.8 141.3 23.6 144.1 23.6L144.1 28.8C140.5 28.8 138.4 29.9 138.4 33L138.4 42.7 133.1 42.7 133.1 23.8ZM154.8 43C149.4 43 145.7 39.8 145.7 33.5L145.7 33.1C145.7 26.8 149.6 23.3 154.7 23.3 159.4 23.3 163.3 25.9 163.3 32.2L163.3 34.5 151.1 34.5C151.3 37.9 152.8 39.2 155 39.2 157 39.2 158.1 38.1 158.5 36.8L163.4 36.8C162.6 40.3 159.7 43 154.8 43ZM151 31 158.1 31C158 28.2 156.7 27 154.6 27 153 27.1 151.5 28 151 31Z" fill="currentColor"/>
+    </svg>
+  </section>
+
+</div><!-- /.deck -->
+
+<!-- Navigation -->
+<nav class="slide-nav">
+  <button id="prev" aria-label="Diapositiva precedente">&#8592;</button>
+  <span id="counter">1 / 9</span>
+  <button id="next" aria-label="Diapositiva successiva">&#8594;</button>
+</nav>
+<div class="key-hint">← → Frecce · Spazio</div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.getElementById('counter');
+  let cur = 0;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    counter.textContent = (cur + 1) + ' / ' + slides.length;
+  }
+
+  document.getElementById('prev').addEventListener('click', () => show(cur - 1));
+  document.getElementById('next').addEventListener('click', () => show(cur + 1));
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      show(cur + 1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      show(cur - 1);
+    }
+  });
+
+  show(0);
+})();
+</script>
+
+</body>
+</html>
