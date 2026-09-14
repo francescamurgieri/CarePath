@@ -65,10 +65,14 @@ Tema: **01 — Accessibilità Digitale**.
 | 4 | PLAN  | `.claude/agents/planner.md`         | Sonnet | PM / Sequencer | `app/docs/tasks.md` |
 | 5 | BUILD | `.claude/agents/builder.md`         | Sonnet | Coder | `app/**` (codice + test BDD) |
 | — | PARTY | `.claude/agents/party-moderator.md` | Opus   | Moderatore peer review | sintesi dei conflitti ai gate |
+| — | ISSUE | `.claude/agents/issue-agent.md`     | Sonnet | QA / Maintainer | test di regressione, fix, PR (trigger manuale) |
 
 Criterio del binding: **Opus** dove l'errore è strutturale e costoso da correggere a valle
 (definizione del problema, scelte architetturali) e dove c'è interazione con l'utente;
 **Sonnet** dove il lavoro è già vincolato da documenti a monte.
+
+L'**ISSUE Agent** è fuori dal flusso ordinario: è attivato manualmente su una singola issue GitHub
+e non partecipa ai gate. Chiude il loop issue → test → fix → PR; non fa merge.
 
 ## Doppia modalità
 
