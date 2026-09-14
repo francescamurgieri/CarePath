@@ -168,7 +168,7 @@ rispondere: vede scritto quello che il medico le ha dato.
 |---------|--------------------------|
 | NRE (codice ricetta) | "È il numero che identifica la tua ricetta in tutto il sistema sanitario. CarePath lo ha già letto: non devi copiarlo tu." |
 | Branca specialistica | "È la categoria della visita (per esempio: ortopedia, oculistica). CarePath la ricava da sola dal tipo di visita scritta sulla ricetta." |
-| Classe di priorità | "È la lettera che indica entro quanto tempo il sistema deve fisssare la visita. Non riguarda la gravità: è un termine organizzativo." |
+| Classe di priorità | "È la lettera che indica entro quanto tempo il sistema deve fissare la visita. Non riguarda la gravità: è un termine organizzativo." |
 | Struttura erogatrice | "È l'ospedale o il poliambulatorio dove si fa la visita. CarePath ti propone le opzioni più adatte, così non devi cercarle tu." |
 | Esenzione | "Con l'esenzione non paghi il ticket, o ne paghi una parte ridotta. CarePath usa il codice già sulla ricetta." |
 | Regime (S/H) | "S = visita programmata (non urgente). H = in regime di ricovero. CarePath usa questo dato per trovare il tipo giusto di appuntamento." |
@@ -298,8 +298,8 @@ Via Roma 12, Torino
 ```
 [ Più vicino a casa ]
 Giovedì 24 ottobre 2024 — ore 14:00
-Ospedale Città della Salute
-Corso Bramante 88, Torino
+Poliambulatorio Torino Nord
+Via delle Rose 45, Torino
 ```
 - Nessun codice, sigla o nome di nomenclatore
 - Nessun campo che richieda di conoscere "branche" o "strutture" (AC-05.3)

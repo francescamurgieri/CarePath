@@ -331,9 +331,9 @@ Stato — card selezionata:
 │  │  [Più vicino a casa]     │    │  ← Badge testuale
 │  │  [ ] Giovedì 24 ottobre  │    │
 │  │      ore 14:00           │    │
-│  │  Ospedale Città          │    │
-│  │  della Salute            │    │
-│  │  Corso Bramante 88,      │    │
+│  │  Poliambulatorio         │    │
+│  │  Torino Nord             │    │
+│  │  Via delle Rose 45,      │    │
 │  │  Torino                  │    │
 │  └──────────────────────────┘    │
 │                                  │
@@ -349,7 +349,7 @@ Stato — nessuna disponibilità:
 │  ! Nessun appuntamento trovato   │  ← Alert informativo
 │  ! nei prossimi 30 giorni.       │
 │  ! Per prenotare può chiamare:   │
-│  ! CUP: 800 xxx xxx              │
+│  ! CUP: 800 000 000              │
 │  ! (numero gratuito)             │
 ```
 

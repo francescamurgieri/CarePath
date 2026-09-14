@@ -289,7 +289,7 @@ tracciamento per PLAN. Gli scenari Gherkin li scrive UX (fase 2) a partire da qu
 
 | Escluso | Perché |
 |---|---|
-| **Integrazione con un CUP reale / API regionali** | fuori dal budget di 5 ore e dipendente da accreditamenti. Il booking è **simulato**, e la demo lo dichiara |
+| **Integrazione con un CUP reale / API regionali** | fuori dal budget di 5 ore e dipendente da accreditamenti. Il booking è **simulato**, e la demo lo dichiara. Una versione produttiva richiederebbe inoltre: (a) una chiamata API a un registro ASL reale (qui l'area ASL è letta dalla ricetta, nessuna rete); (b) se il catalogo del CUP target usa nomi/ID di prestazione diversi dal nomenclatore nazionale, un livello di matching semantico fra testo estratto e catalogo — potenzialmente un LLM, con revisione umana per non violare G-01/G-03. Nessuno dei due è implementato: sono limiti dichiarati, non debito nascosto |
 | **SPID / CIE** | è una barriera reale per Anna, ma risolverla non è nelle nostre mani: richiede un'identità digitale che lei non ha. CarePath lavora sul percorso **senza SPID**, che è quello effettivamente percorribile |
 | **Input vocale** (should-have del concept) | la barriera di Anna **non è digitare**: è non sapere *cosa* digitare. La voce aggiunge superficie tecnica senza togliere il blocco. Sotto la linea del must-have |
 | **Promemoria al caregiver via SMS/email** (should-have del concept) | notificare il figlio **sposta** l'autonomia invece di darla ad Anna, e richiede integrazioni esterne. Escluso per coerenza col tema, non solo per budget. La conferma resta **mostrabile** da Anna a chi vuole (AC-06.2) |
