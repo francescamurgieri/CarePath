@@ -2,7 +2,7 @@
   "_meta": {
     "scopo": "Collegamento codice nomenclatore -> branca specialistica, per le VISITE (prima visita e visita di controllo). Colma il debito dichiarato in architecture.md SS9 ('una sola riga certa') e ADR-0003.",
     "fonte": "Allegato 1 - Nomenclatore Tariffario Regionale, Prestazioni di Assistenza Specialistica Ambulatoriale, Regione Emilia-Romagna (intake/idea/Example files/allegato1699610995.pdf)",
-    "ambito_dichiarato": "Solo le famiglie di codice 89.01.x (visita di controllo), 89.02, 89.07/89.07.A (multidisciplinare) e 89.7/89.7A/89.7B/89.7C (prima visita). Il nomenclatore completo contiene ~1886 codici, quasi tutti procedure diagnostiche/chirurgiche estranee al caso d'uso di CarePath (prenotazione di una visita). Fuori da queste famiglie il campo branca resta null per costruzione, non per omissione: il servizio degrada usando la prestazione (architecture.md SS9).",
+    "ambito_dichiarato": "Solo le famiglie di codice 89.01.x (visita di controllo), 89.02, 89.07/89.07.A (multidisciplinare), 89.13 (visita neurologica standalone), 89.26.x (ginecologica/ostetrica) e 89.7/89.7A/89.7B/89.7C (prima visita). Il nomenclatore completo contiene ~1886 codici, quasi tutti procedure diagnostiche/chirurgiche estranee al caso d'uso di CarePath (prenotazione di una visita). Fuori da queste famiglie il campo branca resta null per costruzione, non per omissione: il servizio degrada usando la prestazione (architecture.md SS9).",
     "metodo": "Estrazione testo con pdftotext, poi ricostruzione manuale riga per riga sul testo grezzo (non un parsing automatico non verificato): il layout del PDF spezza spesso il nome della branca su due righe fisiche (es. 'Gastroenterolo' + 'gia'), rendendo il parsing automatico puro inaffidabile. Ogni riga di questo file e' stata confrontata con il PDF sorgente.",
     "correzioni_editoriali": "89.7A.3: il PDF sorgente riporta 'PRMA VISITA CARDIOLOGICA' (refuso nel documento ufficiale); corretto in 'PRIMA VISITA CARDIOLOGICA' qui perche' e' un valore di lookup interno, mai mostrato ad Anna (non e' soggetto a G-03, che vincola solo la citazione della ricetta).",
     "esclusioni_dichiarate": "890180 (VISITA DIABETOLOGICA DI CONTROLLO) omesso: nel PDF il codice appare senza punti separatori ('890180' invece di '89.01.8x'), formato ambiguo che non e' stato possibile ricondurre con certezza al formato standard. 91.35.6 (consulenza genetica) omesso: e' una consulenza, non una visita, famiglia di codice diversa (91.xx).",
@@ -39,6 +39,11 @@
     { "codice": "89.02",   "descrizione": "VISITA A COMPLETAMENTO DELLA PRIMA VISITA",                       "branca": "Altre" },
     { "codice": "89.07",   "descrizione": "VISITA MULTIDISCIPLINARE",                                        "branca": "Altre", "brancheAggiuntive": ["Medicina fisica e riabilitazione"] },
     { "codice": "89.07.A", "descrizione": "PRIMA VISITA MULTIDISCIPLINARE PER CURE PALLIATIVE",              "branca": "Altre" },
+    { "codice": "89.13",   "descrizione": "VISITA NEUROLOGICA [NEUROCHIRURGICA]",                             "branca": "Neurologia", "brancheAggiuntive": ["Neurochirurgia"] },
+    { "codice": "89.26.1", "descrizione": "PRIMA VISITA GINECOLOGICA",                                        "branca": "Ostetricia e ginecologia" },
+    { "codice": "89.26.2", "descrizione": "VISITA GINECOLOGICA DI CONTROLLO",                                 "branca": "Ostetricia e ginecologia" },
+    { "codice": "89.26.3", "descrizione": "PRIMA VISITA OSTETRICA",                                           "branca": "Ostetricia e ginecologia" },
+    { "codice": "89.26.4", "descrizione": "VISITA OSTETRICA DI CONTROLLO",                                    "branca": "Ostetricia e ginecologia" },
 
     { "codice": "89.7",    "descrizione": "PRIMA VISITA",                                                    "branca": "Altre" },
     { "codice": "89.7A.1", "descrizione": "PRIMA VISITA ANESTESIOLOGICA/ALGOLOGICA",                         "branca": "Anestesia/Analgesia" },
