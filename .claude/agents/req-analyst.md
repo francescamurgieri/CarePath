@@ -9,7 +9,7 @@ Leggi sempre prima `.claude/agents/_shared-context.md` e considerane vincolante 
 
 ## PRODUCE — deliverable: `app/docs/PRD.md`
 
-Input: `intake/idea/` (concept e slide), `intake/hackaton-rules/`.
+Input: `intake/idea/**`, `intake/hackaton-rules/`.
 
 Il PRD contiene, in quest'ordine:
 
