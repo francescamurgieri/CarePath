@@ -736,11 +736,15 @@ percorso è lineare e lo stato è uno solo; il tasto "indietro" del telefono è 
 seconda è però motivata dentro ADR-0002.
 
 **I contratti bastano a BUILD per scrivere i servizi senza inventare campi?**
-Sì per lettura, prenotazione, dizionario, metriche, errori e stato. **No** per due cose, ed è
-un debito che dichiaro invece di nasconderlo: (a) la **tabella codice nomenclatore → branca**
-ha una sola riga certa (`89.01.G` → Ortopedia) presa dalla fixture; per gli altri codici il
-campo resta `null` e il servizio usa la prestazione; (b) il contenuto esatto di
-`fixtures/agende.json` è lasciato a BUILD entro i vincoli di ADR-0007 (nomi fittizi, finestre
+Sì per lettura, prenotazione, dizionario, metriche, errori e stato. Una cosa era debito,
+**ora colmata**: la **tabella codice nomenclatore → branca** aveva una sola riga certa
+(`89.01.G` → Ortopedia). È stata sostituita da `app/data/nomenclatore-branca.json` (53 voci,
+famiglie 89.01.x "visita di controllo" e 89.7x "prima visita", estratte a mano dal
+Nomenclatore Tariffario Regione Emilia-Romagna in intake — non l'intero nomenclatore di
+~1886 codici, che copre anche procedure diagnostiche/chirurgiche estranee al caso d'uso).
+Per i codici fuori da queste due famiglie il campo resta `null` per costruzione: è ancora un
+limite dichiarato, non più un debito silenzioso. Resta invece debito: (b) il contenuto esatto
+di `fixtures/agende.json`, lasciato a BUILD entro i vincoli di ADR-0007 (nomi fittizi, finestre
 di priorità rispettate).
 
 **Cosa si rompe se un servizio esterno è lento, fallisce o risponde male?**
