@@ -76,11 +76,18 @@ function leggiSegmento(barcodes: BarcodeLetto[], righe: RigaOcr[], lunghezzaAtte
     return { testo: daBarcode.testo, confidenza: 1, riquadro: daBarcode.riquadro, origine: 'barcode' };
   }
 
+  // Cerca nei singoli token di ogni riga, non nell'intera riga: i due segmenti NRE
+  // possono stare sulla stessa riga OCR (es. "*1300A* *4008186299*"). Gli asterischi
+  // sono delimitatori Code 39 presenti anche nel testo stampato: vanno rimossi prima
+  // di testare il pattern.
   const pattern = new RegExp(`^[A-Z0-9]{${lunghezzaAttesa}}$`);
   for (const riga of righe) {
-    const token = riga.testo.trim().toUpperCase();
-    if (pattern.test(token)) {
-      return { testo: token, confidenza: riga.confidenzaMinima, riquadro: riga.riquadro, origine: 'ocr' };
+    const tokens = riga.testo.trim().toUpperCase().split(/\s+/);
+    for (const tok of tokens) {
+      const pulito = tok.replace(/\*/g, '');
+      if (pattern.test(pulito)) {
+        return { testo: pulito, confidenza: riga.confidenzaMinima, riquadro: riga.riquadro, origine: 'ocr' };
+      }
     }
   }
   return null;
@@ -232,11 +239,16 @@ export function estraiCampi(
   const contenutoClinicoEscluso = indiceClinico !== -1;
   const righeUtili = contenutoClinicoEscluso ? righe.slice(0, indiceClinico) : righe;
 
-  const righeVisita = righeUtili.filter((riga) => /visita/i.test(riga.testo));
-  const prestazioniMultiple = righeVisita.length > 1;
+  // Rileva righe di prescrizione: visita, analisi, esame, ecografia, TAC, risonanza,
+  // oppure qualsiasi riga che inizi con un codice nomenclatore (es. "91.28.1 ...").
+  // Il filtro precedente era ristretto a /visita/i e perdeva tutte le altre categorie.
+  const PATTERN_RIGA_PRESCRIZIONE =
+    /visita|analisi|esame|ecografia|radiografia|tac|risonanza|elettrocard|biopsia|citogenet|prestazion|\b\d{2,3}\.\d+/i;
+  const righePrestazione = righeUtili.filter((riga) => PATTERN_RIGA_PRESCRIZIONE.test(riga.testo));
+  const prestazioniMultiple = righePrestazione.length > 1;
 
   const nre = costruisciCampoNre(barcodes, righeUtili);
-  const prestazione = costruisciCampoPrestazione(righeVisita);
+  const prestazione = costruisciCampoPrestazione(righePrestazione);
   const classePriorita = costruisciCampoPriorita(righeUtili);
   const esenzione = costruisciCampoEsenzione(righeUtili);
   const areaAsl = costruisciCampoAsl(righeUtili);
@@ -256,7 +268,7 @@ export function estraiCampi(
     motoriUsati,
     durataMs: 0,
     ...(prestazioniMultiple
-      ? { prestazioniMultipleTestoOriginale: righeVisita.map((riga) => normalizzaPrestazione(riga.testo).testoOriginale) }
+      ? { prestazioniMultipleTestoOriginale: righePrestazione.map((riga) => normalizzaPrestazione(riga.testo).testoOriginale) }
       : {}),
   };
 }

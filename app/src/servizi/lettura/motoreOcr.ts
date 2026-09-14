@@ -57,22 +57,36 @@ export function creaMotoreOcr(): MotoreOcr {
     },
 
     async riconosci(bitmap, opzioni): Promise<ParolaOcr[]> {
+      // Log fuori dal try/catch: se non appare in console, riconosci non viene mai invocata.
+      console.debug('[motoreOcr] riconosci avviata', bitmap.width, 'x', bitmap.height);
       const timeoutMs = opzioni?.timeoutMs ?? TIMEOUT_DEFAULT_MS;
+      // Salviamo le dimensioni prima che il bitmap possa essere trasferito/detached.
+      const larghezza = bitmap.width;
+      const altezza = bitmap.height;
       try {
         const worker = await ottieniWorker();
         if (opzioni?.whitelist) {
           await worker.setParameters({ tessedit_char_whitelist: opzioni.whitelist });
         }
 
-        // Convertiamo in Blob prima di passare al worker Tesseract: ImageData serializzata via
-        // postMessage perde la propria identità di costruttore nel contesto worker e finisce sul
-        // path SetImageFile("/input") invece di SetImage — provocando "truncated file".
-        // Un Blob è trasferibile senza perdita e Tesseract lo gestisce nativamente.
-        const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
-        const ctx = canvas.getContext('2d');
-        if (!ctx) throw new Error('Impossibile ottenere contesto 2D per la conversione in Blob.');
-        ctx.drawImage(bitmap, 0, 0);
-        const blob = await canvas.convertToBlob({ type: 'image/png' });
+        // Usiamo un canvas HTML del main thread invece di OffscreenCanvas: più compatibile
+        // e il suo toBlob() è l'API standard per estrarre un Blob da un ImageBitmap.
+        // OffscreenCanvas.convertToBlob() ha supporto incompleto su alcuni browser/versioni
+        // e può produrre blob vuoti senza lanciare errori — questo causa "truncated file" in
+        // Tesseract. document.createElement('canvas') è disponibile ovunque nel thread UI.
+        const blob = await new Promise<Blob>((resolve, reject) => {
+          const el = document.createElement('canvas');
+          el.width = larghezza;
+          el.height = altezza;
+          const ctx = el.getContext('2d');
+          if (!ctx) { reject(new Error('canvas.getContext("2d") ha restituito null')); return; }
+          ctx.drawImage(bitmap, 0, 0);
+          el.toBlob((b) => {
+            if (b) resolve(b);
+            else reject(new Error('canvas.toBlob ha restituito null'));
+          }, 'image/png');
+        });
+        console.debug('[motoreOcr] blob prodotto, dimensione:', blob.size, 'byte');
         const esecuzione = worker.recognize(blob);
 
         const risultato = await new Promise<Awaited<typeof esecuzione> | null>((resolve) => {
@@ -88,14 +102,20 @@ export function creaMotoreOcr(): MotoreOcr {
         });
 
         // Timeout o abort: si restituiscono le parole già trovate — qui nessuna — mai un'eccezione.
-        if (!risultato) return [];
+        if (!risultato) {
+          console.warn('[motoreOcr] timeout o abort — nessuna parola restituita');
+          return [];
+        }
 
+        console.info(`[motoreOcr] parole riconosciute: ${risultato.data.words.length}`);
         return risultato.data.words.map((parola) => ({
           testo: parola.text,
           confidenza: normalizzaConfidenzaOcr(parola.confidence),
-          riquadro: riquadroNormalizzato(parola.bbox, bitmap.width, bitmap.height),
+          riquadro: riquadroNormalizzato(parola.bbox, larghezza, altezza),
         }));
-      } catch {
+      } catch (err) {
+        // Log diagnostico: aiuta a capire se il problema è nel Blob, nel worker o nell'OCR.
+        console.warn('[motoreOcr] riconosci: errore inatteso —', err);
         return [];
       }
     },

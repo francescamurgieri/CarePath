@@ -105,5 +105,14 @@ async function eseguiPipeline(
   const lettura = estraiCampi(parole, barcodes, { larghezzaPx: bitmap.width, altezzaPx: bitmap.height });
   lettura.idLettura = `lettura-${foto.acquisitaIl.getTime()}`;
 
+  console.debug(
+    '[lettoreRicetta] barcodes:', barcodes.length,
+    '| parole:', parole.length,
+    '| nre:', lettura.nre.stato,
+    '| prestazione:', lettura.prestazione.stato,
+    lettura.prestazione.stato !== 'nonLetto' ? `(${(lettura.prestazione as { citazioneOriginale?: string }).citazioneOriginale ?? ''})` : '',
+    '| puoProcedere:', lettura.puoProcedere,
+  );
+
   return { esito: 'ok', valore: lettura };
 }
