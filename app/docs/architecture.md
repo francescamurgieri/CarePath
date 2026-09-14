@@ -209,6 +209,11 @@ export interface Prestazione {
   codiceNomenclatore: string | null; // "89.01.G"
   /** Derivata da tabella statica. Usata dal servizio, MAI mostrata ad Anna come scelta (AC-05.3). */
   branca: string | null;
+  /** Branche accessorie quando il nomenclatore ne elenca più di una per lo stesso codice
+   *  (es. "89.01.A" → Diagnostica per immagini + Medicina nucleare). Stesso trattamento di
+   *  `branca`: solo al servizio, mai ad Anna. `[]` se non applicabile — mai `undefined` per un
+   *  campo che il servizio deve poter iterare senza controllo di presenza. */
+  brancheAggiuntive: readonly string[];
 }
 
 export type LetteraPriorita = 'U' | 'B' | 'D' | 'P';
@@ -518,6 +523,32 @@ export interface RegistroMetriche {
 }
 ```
 
+**Regola di conteggio — chiude un rilievo BLOCCANTE del party di Gate 2.** Senza una regola
+esplicita, i target originari di M3 (≤ 2 decisioni) e M5 (≤ 6 schermi) erano contraddetti dal
+flusso descritto in §2 e da `ux-spec.md`, che marca "Decisione chiesta alla persona" su 5
+schermi del percorso nominale. La tabella di S-11 avrebbe mostrato un numero falso davanti a un
+valutatore — è esattamente il deliverable "Autonomia & Limiti" richiesto dal tema. Il party ha
+verificato che una regola "favorevole" applicata solo al "dopo" avrebbe truccato il confronto
+col baseline "prima"; **decisione dell'utente**: alzare i target a valori reali invece di
+restringere la definizione per farli quadrare a posteriori.
+
+- **`contaDecisione()`** si invoca su ogni schermo che chiede una risposta tra alternative,
+  incluse le conferme (S-04, S-06, S-07, S-08). **Non** si invoca su S-02 (scattare/scegliere
+  dalla galleria): è un metodo per fornire la foto, non una decisione sulla visita. → **4
+  decisioni** nel percorso senza intoppi; il ramo di fallback US-03 (S-04b) ne aggiunge una,
+  dichiarato come limite in `PRD.md` §6, non nascosto.
+- **`contaSchermo()`** si invoca su ogni passo che **richiede un'azione della persona**,
+  esclusi gli stati di sola attesa (S-03) e la schermata di solo esito (S-09). Percorso senza
+  intoppi: S-01, S-02, S-04, S-06, S-07, S-08 = **6 schermi**. Con il fallback US-03
+  (S-04b + S-05b): **7-8 schermi** — il target copre questo ramo, non solo il percorso ideale.
+- **La stessa regola si applica al baseline "prima"** (`PRD.md` §2): esclusa la sola schermata
+  di esito (passo 11), il conteggio scende da 11 a **10**. Il confronto prima/dopo resta forte
+  (10→6-8 schermi, ~6→4 decisioni) ed è ora verificabile applicando la stessa regola su entrambi
+  i lati, non un numero aggiustato solo sul lato "dopo".
+
+Questa regola è **riportata identica** in `PRD.md` §6 (M3/M5, con target ≤ 4 / ≤ 8) — un
+valutatore che legge solo S-11 deve poter verificare lui stesso il conteggio.
+
 ---
 
 ## 5. Gestione dell'incertezza dell'AI
@@ -738,7 +769,7 @@ seconda è però motivata dentro ADR-0002.
 **I contratti bastano a BUILD per scrivere i servizi senza inventare campi?**
 Sì per lettura, prenotazione, dizionario, metriche, errori e stato. Una cosa era debito,
 **ora colmata**: la **tabella codice nomenclatore → branca** aveva una sola riga certa
-(`89.01.G` → Ortopedia). È stata sostituita da `app/data/nomenclatore-branca.json` (53 voci,
+(`89.01.G` → Ortopedia). È stata sostituita da `app/data/nomenclatore-branca.json` (58 voci,
 famiglie 89.01.x "visita di controllo" e 89.7x "prima visita", estratte a mano dal
 Nomenclatore Tariffario Regione Emilia-Romagna in intake — non l'intero nomenclatore di
 ~1886 codici, che copre anche procedure diagnostiche/chirurgiche estranee al caso d'uso).

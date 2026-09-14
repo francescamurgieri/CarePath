@@ -167,12 +167,12 @@ d'ingresso dichiarato dall'architettura (tipi prima del codice, ADR-0006).
   citato con fonte nei suoi stessi metadati), e deve essere importabile da `prestazione.ts`.
   Confonderla con una fixture violerebbe la distinzione che ADR-0004 protegge.
 - **Comportamento richiesto**: `trovaBranca(codiceNomenclatore: string): { branca: string;
-  brancheAggiuntive?: string[] } | null` — match esatto sul campo `codice` delle 53 voci; se il
+  brancheAggiuntive?: string[] } | null` — match esatto sul campo `codice` delle 58 voci; se il
   codice non è fra quelli (famiglie dichiarate in `_meta.ambito_dichiarato`), ritorna `null` e
   **non tenta un match parziale o euristico** (indovinare la branca da un prefisso non elencato
   sarebbe un'inferenza non tracciabile — coerente con G-04).
 - **Definizione di fatto**: test verde su `trovaBranca('89.01.G')` → `{ branca: 'Ortopedia' }`
-  (copre la riga certa originaria, ora una fra 53); test verde su un codice fuori ambito (es.
+  (copre la riga certa originaria, ora una fra 58); test verde su un codice fuori ambito (es.
   `'99.99'`) → `null`; test che verifica che il modulo non importi nulla da `src/fixtures/`.
 
 #### T-09 — `dominio/prestazione.ts`

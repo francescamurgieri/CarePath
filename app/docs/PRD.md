@@ -97,6 +97,10 @@ citato nel concept di intake). La replica di questo percorso è un deliverable d
 | 10 | Riepilogo e conferma | testo denso, costo/esenzione poco leggibile, "cosa portare" assente o in fondo |
 | 11 | Conferma | nessuna rassicurazione che si possa disdire; paura di aver sbagliato |
 
+**Nota per M5 (§6):** il conteggio "passi" della metrica esclude il passo 11 (schermata di solo
+esito, nessuna azione richiesta) — la stessa regola applicata al percorso "dopo", per un
+confronto onesto. Base per M5: **10** passi che richiedono un'azione, non 11.
+
 **Esito attuale: il task non viene completato in autonomia.** Anna chiama il figlio o il call
 center. Il servizio digitale ha spostato efficienza sul sistema e complessità sulla paziente.
 
@@ -311,9 +315,9 @@ tracciamento per PLAN. Gli scenari Gherkin li scrive UX (fase 2) a partire da qu
 |---|---|---|---|---|
 | **M1** | **Campi di testo che Anna compila a mano** nel percorso nominale | ≥ 2 (NRE 15 caratteri + codice fiscale 16) | **0** | conteggio dei campi di input attraversati fino alla conferma |
 | **M2** | **Termini amministrativi che deve conoscere senza spiegazione** | 5 (NRE, branca, prestazione a catalogo, priorità, struttura erogatrice) | **0** — ogni termine mostrato ha "Che significa?" | ispezione degli schermi: termine senza affordance = difetto |
-| **M3** | **Decisioni richieste**, e ampiezza di ciascuna | ≥ 4 decisioni, con opzioni nell'ordine delle decine (branche, strutture, slot) | **≤ 2 decisioni**, ciascuna fra **≤ 3 opzioni** | conteggio degli schermi che chiedono una scelta e delle opzioni offerte |
+| **M3** | **Decisioni richieste**, e ampiezza di ciascuna | **~6** (branca, prestazione, struttura, slot — scelte fra decine di opzioni; §2, stessa regola di conteggio) | **≤ 4 decisioni**, ciascuna fra **≤ 3 opzioni** | conta gli schermi con **alternative fra cui scegliere**, incluse le conferme (S-04, S-06, S-07, S-08 = 4 nel percorso senza intoppi). **Non** conta S-02 (scattare/scegliere dalla galleria): è un metodo per fornire la foto, non una decisione sulla visita. Se scatta il fallback US-03, S-04b aggiunge una scelta in più: dichiarato come limite, non nascosto (architecture.md §4.7) |
 | **M4** | **Errori bloccanti prima di procedere** | ≥ 1 (`Codice non valido`, senza recupero) | **0 errori senza recupero guidato** | ogni stato d'errore deve offrire un'azione successiva che porta avanti (AC-03.1/03.3) |
-| **M5** | **Passi fino alla conferma** | 11 (§2) | **≤ 6** | conteggio degli schermi attraversati |
+| **M5** | **Passi fino alla conferma** | **10** (§2, esclusa la schermata di solo esito — stessa regola applicata al "dopo") | **≤ 8** | conta i passi che **richiedono un'azione della persona**, esclusi gli stati di sola attesa e la schermata di solo esito. Percorso senza intoppi: 6. Con il fallback US-03 (foto da rileggere): 7-8 — il target include questo ramo, non solo il percorso ideale (architecture.md §4.7) |
 | **M6** | **Task completato senza aiuto esterno** | **no** (chiama il figlio o il call center) | **sì** | percorso completato dall'inizio alla conferma senza uscire dall'app e senza input che Anna non sa produrre |
 | **M7** | **Fedeltà del significato** | — | **100%** dei campi mostrati riconducibili alla citazione originale | per ogni informazione a schermo esiste il testo originale della ricetta consultabile (AC-02.2) |
 

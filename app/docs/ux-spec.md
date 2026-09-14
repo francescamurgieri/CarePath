@@ -408,10 +408,17 @@ reali del tipo di interfaccia riprodotta.
 |---|---|---|
 | Campi di testo da compilare | ≥ 2 (NRE 15 car. + CF 16 car.) | 0 |
 | Termini senza spiegazione | 5 (NRE, branca, priorità, struttura, esenzione) | 0 |
-| Decisioni richieste | ≥ 4 (decine di opzioni ciascuna) | 2 (fra 2–3 opzioni) |
+| Decisioni richieste | ~6 (decine di opzioni ciascuna) | ≤ 4 (fra 2–3 opzioni) |
 | Errori senza recupero guidato | ≥ 1 | 0 |
-| Schermi fino alla conferma | 11 | ≤ 6 |
+| Schermi fino alla conferma | 10 | ≤ 8 |
 | Task completato da Anna da sola | No | Sì |
+
+*Nota sotto la tabella (mostrata in demo):* "Contiamo solo gli schermi che chiedono un'azione
+(escluse le attese) e solo le decisioni fra alternative (esclusa la scelta di come scattare la
+foto). Stessa regola su entrambe le colonne — architecture.md §4.7." I numeri di questa tabella
+sono **misurati dal vivo sulla sessione appena conclusa** (`registroMetriche`, T-12), non un
+valore fisso: se qualcosa va storto durante la demo (es. serve rifare la foto), il numero reale
+apparirà qui, non un target promesso in anticipo.
 
 **Limiti residui dichiarati**:
 - Il sistema di prenotazione è simulato: la conferma non è trasmessa a un CUP reale.
