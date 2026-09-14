@@ -90,28 +90,36 @@ async function eseguiPipeline(
   motoreOcr: MotoreOcr,
   opzioni?: OpzioniLettura,
 ): Promise<Risultato<LetturaRicetta>> {
+  console.debug('[pipeline] ▶ START — tipo:', foto.immagine.type, 'size:', foto.immagine.size, 'sorgente:', foto.sorgente);
   opzioni?.onProgresso?.({ fase: 'preprocessing', percentuale: 5 });
 
   const bitmapOriginale = await createImageBitmap(foto.immagine);
+  console.debug('[pipeline] createImageBitmap ok —', bitmapOriginale.width, 'x', bitmapOriginale.height);
   const bitmap = await preprocessa(bitmapOriginale);
+  console.debug('[pipeline] preprocessa ok —', bitmap.width, 'x', bitmap.height);
 
   opzioni?.onProgresso?.({ fase: 'barcode', percentuale: 20 });
   const barcodes = await decodificatore.decodifica(bitmap, TIMEOUT_BARCODE_MS);
+  console.debug('[pipeline] barcodes trovati:', barcodes.length, barcodes.map((b) => `${b.formato}:${b.testo}`));
 
   opzioni?.onProgresso?.({ fase: 'ocr', percentuale: 40 });
   const parole = await motoreOcr.riconosci(bitmap, { segnale: opzioni?.segnale, timeoutMs: TIMEOUT_OCR_MS });
+  console.debug('[pipeline] parole OCR:', parole.length, '— prime 10:', parole.slice(0, 10).map((p) => `"${p.testo}"(${(p.confidenza * 100).toFixed(0)}%)`));
 
   opzioni?.onProgresso?.({ fase: 'estrazione', percentuale: 90 });
   const lettura = estraiCampi(parole, barcodes, { larghezzaPx: bitmap.width, altezzaPx: bitmap.height });
   lettura.idLettura = `lettura-${foto.acquisitaIl.getTime()}`;
 
   console.debug(
-    '[lettoreRicetta] barcodes:', barcodes.length,
-    '| parole:', parole.length,
-    '| nre:', lettura.nre.stato,
+    '[pipeline] RESULT —',
+    'nre:', lettura.nre.stato, lettura.nre.stato !== 'nonLetto' ? `"${lettura.nre.valore?.completo}"` : '',
     '| prestazione:', lettura.prestazione.stato,
-    lettura.prestazione.stato !== 'nonLetto' ? `(${(lettura.prestazione as { citazioneOriginale?: string }).citazioneOriginale ?? ''})` : '',
+    lettura.prestazione.stato !== 'nonLetto' ? `"${(lettura.prestazione as { citazioneOriginale?: string }).citazioneOriginale}"` : '',
+    '| priorita:', lettura.classePriorita.stato,
+    '| esenzione:', lettura.esenzione.stato,
+    '| asl:', lettura.areaAsl.stato,
     '| puoProcedere:', lettura.puoProcedere,
+    '| clinicoEscluso:', lettura.contenutoClinicoEscluso,
   );
 
   return { esito: 'ok', valore: lettura };

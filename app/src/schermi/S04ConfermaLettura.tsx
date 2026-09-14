@@ -81,11 +81,11 @@ export function S04ConfermaLettura() {
           <p>Stavo cercando questo?</p>
           <p style={{ fontSize: '1.5rem', fontWeight: 700 }}>{prestazione.etichettaSemplice}</p>
           <p>
-            Codice ricetta (NRE): {lettura.nre.stato !== 'nonLetto' ? formattaNreLeggibile(lettura.nre.valore) : '—'}{' '}
-            <CheSignifica termine="nre" />
+            Codice ricetta (NRE): {lettura.nre.stato !== 'nonLetto' ? formattaNreLeggibile(lettura.nre.valore) : '—'}
           </p>
         </CardBody>
       </Card>
+      <CheSignifica termine="nre" />
 
       <p>Così c'è scritto sulla tua ricetta:</p>
       <CitazioneOriginale citazioneOriginale={citazioneCompleta} apertoDiDefault />

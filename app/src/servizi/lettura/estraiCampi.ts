@@ -235,8 +235,12 @@ export function estraiCampi(
   if (parole.length > 0) motoriUsati.push('ocr-tesseract');
 
   const righe = ricostruisciRighe(parole);
+  console.debug('[estraiCampi] righe ricostruite:', righe.length);
+  righe.forEach((r, i) => console.debug(`  riga[${i}] conf=${(r.confidenzaMinima * 100).toFixed(0)}% | "${r.testo}"`));
+
   const indiceClinico = righe.findIndex((riga) => rigaClinica(riga.testo));
   const contenutoClinicoEscluso = indiceClinico !== -1;
+  if (contenutoClinicoEscluso) console.debug('[estraiCampi] contenuto clinico escluso da riga', indiceClinico, `"${righe[indiceClinico].testo}"`);
   const righeUtili = contenutoClinicoEscluso ? righe.slice(0, indiceClinico) : righe;
 
   // Rileva righe di prescrizione: visita, analisi, esame, ecografia, TAC, risonanza,
@@ -245,10 +249,13 @@ export function estraiCampi(
   const PATTERN_RIGA_PRESCRIZIONE =
     /visita|analisi|esame|ecografia|radiografia|tac|risonanza|elettrocard|biopsia|citogenet|prestazion|\b\d{2,3}\.\d+/i;
   const righePrestazione = righeUtili.filter((riga) => PATTERN_RIGA_PRESCRIZIONE.test(riga.testo));
+  console.debug('[estraiCampi] righePrestazione:', righePrestazione.map((r) => `"${r.testo}"`));
   const prestazioniMultiple = righePrestazione.length > 1;
 
   const nre = costruisciCampoNre(barcodes, righeUtili);
+  console.debug('[estraiCampi] nre:', nre.stato, nre.stato !== 'nonLetto' ? `"${nre.valore?.completo}"` : `(origine: ${nre.origine})`);
   const prestazione = costruisciCampoPrestazione(righePrestazione);
+  console.debug('[estraiCampi] prestazione:', prestazione.stato, prestazione.stato !== 'nonLetto' ? `"${(prestazione as {citazioneOriginale?:string}).citazioneOriginale}"` : '');
   const classePriorita = costruisciCampoPriorita(righeUtili);
   const esenzione = costruisciCampoEsenzione(righeUtili);
   const areaAsl = costruisciCampoAsl(righeUtili);
