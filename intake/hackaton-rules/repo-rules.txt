@@ -1,0 +1,9 @@
+Il progetto sarà valutato in maniera automatica.
+
+Il repository deve rispettare l'alberatura:
+
+repo-root
+--- agents (contiene infrastruttura agentica)
+--- app (contiene deliverables software)
+--- presentation ( contiene presentazione in formato html che rispetti le guidelines accenture)
+
