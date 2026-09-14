@@ -1,37 +1,11 @@
 # Contesto condiviso — NON è un agente
 
-Frammento incluso per riferimento in tutti gli agenti della pipeline CarePath.
-Ogni agente deve considerare vincolanti le regole qui sotto.
+Frammento incluso per riferimento in tutti gli agenti della pipeline.
+Questo file descrive **il metodo della pipeline**: è invariante e non dipende dal caso
+d'uso. Il caso concreto su cui si sta lavorando (persona, dominio, servizio target,
+guardrail, budget) sta in `_case.md`.
 
-## Prodotto
-
-**CarePath** — accessibility layer sopra i sistemi di prenotazione sanitaria (CUP).
-Foto della ricetta → l'AI interpreta → percorso guidato → conferma chiara.
-Persona: **Anna, 74 anni**, deve prenotare una visita prescritta e oggi si blocca su
-NRE, branca specialistica, classe di priorità, struttura erogatrice.
-Input di partenza: `intake/` (concept, slide, regole). È materiale **read-only**.
-
-## Tema: 01 — Accessibilità Digitale
-
-- Il focus **non** è l'audit tecnico né la conformità formale: **è la persona**.
-- Persona concreta e barriera precisa: chi è, cosa sta facendo, dove si blocca.
-- Servizio digitale reale o realistico.
-- Usabile **dalla persona stessa**, non da uno sviluppatore.
-- **Semplificare senza tradire**: il significato delle informazioni originali non cambia mai.
-- Va mostrato il percorso **prima / dopo**, e dichiarato dove l'AI ha contribuito
-  e dove è servita revisione umana.
-
-Da evitare: strumenti per sviluppatori invece che per la persona; checker di conformità che
-producono solo report; soluzioni che diagnosticano senza aiutare; restyling che non danno
-autonomia; profili utente generici; uso dell'AI non spiegabile.
-
-## Guardrail non negoziabili
-
-- **No diagnosi. No triage clinico. No consigli medici.** CarePath fa solo navigazione
-  del servizio e prenotazione. Se un contenuto sconfina nel clinico, si cita testualmente
-  la ricetta senza interpretarla.
-- Nessun dato sanitario reale nei mock o nei test.
-- Non alterare il significato di ciò che c'è scritto sulla ricetta.
+Ogni agente deve considerare vincolanti entrambi i file.
 
 ## Riferimenti obbligatori — developers.italia.it
 
@@ -65,6 +39,12 @@ Ogni agente opera in una di due modalità:
 - **REVIEW** (modalità party) — esamina il deliverable di un altro agente dalla propria
   lente professionale. Non riscrive: solleva rilievi. Ogni rilievo va classificato
   `BLOCCANTE` / `IMPORTANTE` / `MINORE` e deve citare un punto preciso del documento.
+
+## Livello di astrazione dei ruoli
+
+Un agente descrive un **mestiere**, non un prodotto. Nel definire o modificare un
+agente, il caso d'uso non va mai scritto dentro il ruolo: si referenzia `_case.md`.
+Un ruolo che sa già la risposta non progetta, trascrive.
 
 ## Deliverable
 

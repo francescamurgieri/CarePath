@@ -62,7 +62,13 @@ matrice delle lenti di review e registro dei gate. Leggilo prima di intervenire 
 e tienilo aggiornato — è ciò che rende la catena leggibile a un valutatore umano.
 
 Gli agenti sono **subagenti Claude Code** in `.claude/agents/`, con contesto condiviso e
-vincolante in `.claude/agents/_shared-context.md` (tema, guardrail, riferimenti italia, lingua).
+vincolante diviso in due file: `_shared-context.md` (il **metodo**: doppia modalità,
+classificazione dei rilievi, riferimenti italia, lingua — invariante) e `_case.md`
+(il **caso**: persona, barriera, servizio target, guardrail di dominio, budget).
+
+Gli agenti descrivono **mestieri, non prodotti**: dicono "la persona", "il documento
+sorgente", "il servizio target", e li istanziano leggendo `_case.md`. Chi modifica un
+agente non ci scrive dentro il caso d'uso.
 
 | # | Agente | Modello | Deliverable |
 |---|--------|---------|-------------|
@@ -72,6 +78,7 @@ vincolante in `.claude/agents/_shared-context.md` (tema, guardrail, riferimenti 
 | 4 | `planner`         | Sonnet | `app/docs/tasks.md` |
 | 5 | `builder`         | Sonnet | `app/**` (codice + test BDD) |
 | — | `party-moderator` | Opus   | sintesi dei conflitti ai gate |
+| — | `issue-agent`     | Sonnet | loop issue → test → fix → PR (manutenzione, trigger manuale) |
 
 Opus dove l'errore è strutturale e costoso a valle o c'è interazione umana; Sonnet dove il
 lavoro è già vincolato dai documenti a monte.

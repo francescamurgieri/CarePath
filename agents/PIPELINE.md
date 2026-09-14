@@ -4,7 +4,16 @@ Documento di riferimento della pipeline: agenti, workflow, gate e deliverable pr
 È il punto di ingresso per chi deve **valutare** o riprendere il lavoro.
 
 Le definizioni eseguibili degli agenti stanno in `.claude/agents/` (subagenti Claude Code).
-Il contesto condiviso e vincolante per tutti è `.claude/agents/_shared-context.md`.
+Il contesto condiviso e vincolante per tutti è diviso in due file:
+`.claude/agents/_shared-context.md` (il **metodo** della pipeline: doppia modalità,
+classificazione dei rilievi, riferimenti developers.italia.it, lingua — invariante) e
+`.claude/agents/_case.md` (il **caso** concreto: persona, barriera, servizio target,
+guardrail di dominio, budget di consegna — cambia a ogni nuovo prodotto).
+
+Gli agenti descrivono **mestieri, non prodotti**: parlano di "la persona", "il documento
+sorgente", "il servizio target", e istanziano questi ruoli leggendo `_case.md`. Questo
+rende la pipeline riusabile su un altro caso senza riscrivere gli agenti, e tiene il caso
+d'uso in un posto solo invece che duplicato in sette file.
 
 ## Idea in una riga
 
