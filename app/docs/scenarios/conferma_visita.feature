@@ -48,3 +48,12 @@ Funzionalità: Confermare che il sistema ha letto la visita giusta
       la tua visita entro 30 giorni"
     E la spiegazione non dice nulla sulla gravità della sua situazione di salute
     E non contiene parole come "urgente", "grave" o "clinico"
+
+  Scenario: La ricetta contiene più di una prestazione
+    Dato che la ricetta fotografata da Anna elenca due prestazioni diverse
+    Quando il sistema finisce di leggerla
+    Allora il sistema non sceglie una prestazione al posto di Anna
+    E le dice che la ricetta contiene più di una prestazione
+    E le cita entrambe le prestazioni come scritte sulla ricetta
+    E la indirizza al CUP telefonico per quella ricetta
+    E il percorso si ferma qui, senza proporre un appuntamento
