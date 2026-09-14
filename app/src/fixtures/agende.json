@@ -1,0 +1,42 @@
+{
+  "_nota": "Fixture sintetica — ADR-0007 §4, G-02, AC-RD1.2. Nessuna struttura, indirizzo o telefono qui corrisponde a un ente reale. Gli slot sono espressi come offsetGiorni relativi a `riferimentoTemporale` (mai date assolute): la demo non deve mostrare appuntamenti nel passato fra un mese.",
+  "strutture": [
+    {
+      "id": "STR-01",
+      "denominazione": "Poliambulatorio Torino Nord",
+      "indirizzo": "Via delle Rose 45",
+      "comune": "Torino",
+      "codiceAsl": "ASL-TO3"
+    },
+    {
+      "id": "STR-02",
+      "denominazione": "Presidio Sanitario Valle Chiara",
+      "indirizzo": "Via dei Pioppi 12",
+      "comune": "Torino",
+      "codiceAsl": "ASL-TO3"
+    },
+    {
+      "id": "STR-03",
+      "denominazione": "Poliambulatorio Le Ginestre",
+      "indirizzo": "Corso dei Tigli 7",
+      "comune": "Moncalieri",
+      "codiceAsl": "ASL-TO5"
+    },
+    {
+      "id": "STR-04",
+      "denominazione": "Centro Sanitario San Rocco",
+      "indirizzo": "Via Santa Chiara 3",
+      "comune": "Chieri",
+      "codiceAsl": "ASL-TO5"
+    }
+  ],
+  "slot": [
+    { "id": "SLOT-01", "strutturaId": "STR-01", "offsetGiorni": 2, "ora": "09:30", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
+    { "id": "SLOT-02", "strutturaId": "STR-01", "offsetGiorni": 9, "ora": "11:00", "ticket": { "dovuto": false, "motivo": "Esente per patologia dichiarata" } },
+    { "id": "SLOT-03", "strutturaId": "STR-02", "offsetGiorni": 5, "ora": "14:15", "ticket": { "dovuto": true, "importoEuro": 18.0 } },
+    { "id": "SLOT-04", "strutturaId": "STR-02", "offsetGiorni": 20, "ora": "10:00", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
+    { "id": "SLOT-05", "strutturaId": "STR-03", "offsetGiorni": 3, "ora": "08:45", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
+    { "id": "SLOT-06", "strutturaId": "STR-03", "offsetGiorni": 12, "ora": "16:30", "ticket": { "dovuto": false, "motivo": "Esente per patologia dichiarata" } },
+    { "id": "SLOT-07", "strutturaId": "STR-04", "offsetGiorni": 7, "ora": "09:00", "ticket": { "dovuto": true, "importoEuro": 18.0 } }
+  ]
+}

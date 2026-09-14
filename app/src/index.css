@@ -1,0 +1,29 @@
+/*
+ * Design system di base — T-03 (AC-08.1).
+ * Si importano SOLO i token/CSS di bootstrap-italia, mai il JS vanilla del pacchetto
+ * (ADR-0001 punto 2-3, architecture.md §6.4): il JS di Bootstrap Italia manipola il DOM
+ * e desincronizza React. I componenti interattivi passano da `design-react-kit`.
+ */
+@import 'bootstrap-italia/dist/css/bootstrap-italia.min.css';
+
+:root {
+  color-scheme: light;
+}
+
+/* AC-08.2 / ux-spec §3: corpo del testo >= 18px, override dei token, non !important sparsi. */
+body {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+/* AC-06.3: nessuna larghezza fissa, nessuno scorrimento orizzontale a 375px / zoom 200%. */
+html,
+body,
+#root {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  max-width: 100%;
+}

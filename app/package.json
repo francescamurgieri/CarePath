@@ -1,0 +1,38 @@
+{
+  "name": "carepath",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run --exclude '**/*.slow.test.ts'",
+    "test:watch": "vitest",
+    "test:slow": "vitest run src/servizi/lettura/lettura-reale.slow.test.ts"
+  },
+  "dependencies": {
+    "bootstrap-italia": "^2.18.3",
+    "design-react-kit": "^5.10.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tesseract.js": "^5.1.1",
+    "zxing-wasm": "^1.2.15"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^26.5.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^24.1.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5"
+  }
+}
