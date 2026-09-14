@@ -8,7 +8,6 @@
 import { createWorker, type Worker as TesseractWorker } from 'tesseract.js';
 import type { Confidenza, Riquadro } from '../../dominio/tipi';
 import { normalizzaConfidenzaOcr } from '../../dominio/confidenza';
-import { bitmapAImageData } from './preprocessa';
 
 export interface ParolaOcr {
   testo: string;
@@ -65,8 +64,16 @@ export function creaMotoreOcr(): MotoreOcr {
           await worker.setParameters({ tessedit_char_whitelist: opzioni.whitelist });
         }
 
-        const imageData = bitmapAImageData(bitmap);
-        const esecuzione = worker.recognize(imageData as unknown as Parameters<TesseractWorker['recognize']>[0]);
+        // Convertiamo in Blob prima di passare al worker Tesseract: ImageData serializzata via
+        // postMessage perde la propria identità di costruttore nel contesto worker e finisce sul
+        // path SetImageFile("/input") invece di SetImage — provocando "truncated file".
+        // Un Blob è trasferibile senza perdita e Tesseract lo gestisce nativamente.
+        const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Impossibile ottenere contesto 2D per la conversione in Blob.');
+        ctx.drawImage(bitmap, 0, 0);
+        const blob = await canvas.convertToBlob({ type: 'image/png' });
+        const esecuzione = worker.recognize(blob);
 
         const risultato = await new Promise<Awaited<typeof esecuzione> | null>((resolve) => {
           const timer = setTimeout(() => resolve(null), timeoutMs);

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "carepath-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "export PATH=/Users/francesca.murgieri/.nvm/versions/node/v20.20.1/bin:$PATH && cd app && npm run dev"],
+      "port": 5173
+    }
+  ]
+}

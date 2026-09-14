@@ -1,42 +1,21 @@
 {
-  "_nota": "Fixture sintetica — ADR-0007 §4, G-02, AC-RD1.2. Nessuna struttura, indirizzo o telefono qui corrisponde a un ente reale. Gli slot sono espressi come offsetGiorni relativi a `riferimentoTemporale` (mai date assolute): la demo non deve mostrare appuntamenti nel passato fra un mese.",
+  "_meta": {
+    "scopo": "Fixture di test automation per il servizio di prenotazione simulato (ADR-0007). Strutture e slot sintetici: nessun nome, logo o indirizzo riconducibile a un ente reale (G-02, AC-RD1.2).",
+    "regolaSlot": "offsetGiorni è relativo a riferimentoTemporale, mai una data assoluta: la demo non deve mostrare appuntamenti nel passato fra un mese."
+  },
   "strutture": [
-    {
-      "id": "STR-01",
-      "denominazione": "Poliambulatorio Torino Nord",
-      "indirizzo": "Via delle Rose 45",
-      "comune": "Torino",
-      "codiceAsl": "ASL-TO3"
-    },
-    {
-      "id": "STR-02",
-      "denominazione": "Presidio Sanitario Valle Chiara",
-      "indirizzo": "Via dei Pioppi 12",
-      "comune": "Torino",
-      "codiceAsl": "ASL-TO3"
-    },
-    {
-      "id": "STR-03",
-      "denominazione": "Poliambulatorio Le Ginestre",
-      "indirizzo": "Corso dei Tigli 7",
-      "comune": "Moncalieri",
-      "codiceAsl": "ASL-TO5"
-    },
-    {
-      "id": "STR-04",
-      "denominazione": "Centro Sanitario San Rocco",
-      "indirizzo": "Via Santa Chiara 3",
-      "comune": "Chieri",
-      "codiceAsl": "ASL-TO5"
-    }
+    { "id": "s1", "denominazione": "Poliambulatorio San Luca", "indirizzo": "Via Roma 12", "comune": "Torino", "codiceAsl": "ASL-TO3" },
+    { "id": "s2", "denominazione": "Poliambulatorio Torino Nord", "indirizzo": "Via delle Rose 45", "comune": "Torino", "codiceAsl": "ASL-TO3" },
+    { "id": "s3", "denominazione": "Poliambulatorio Le Ginestre", "indirizzo": "Via dei Pioppi 8", "comune": "Torino", "codiceAsl": "ASL-TO4" },
+    { "id": "s4", "denominazione": "Presidio Sanitario Valle Chiara", "indirizzo": "Corso Valchiara 20", "comune": "Torino", "codiceAsl": "ASL-TO3" }
   ],
   "slot": [
-    { "id": "SLOT-01", "strutturaId": "STR-01", "offsetGiorni": 2, "ora": "09:30", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
-    { "id": "SLOT-02", "strutturaId": "STR-01", "offsetGiorni": 9, "ora": "11:00", "ticket": { "dovuto": false, "motivo": "Esente per patologia dichiarata" } },
-    { "id": "SLOT-03", "strutturaId": "STR-02", "offsetGiorni": 5, "ora": "14:15", "ticket": { "dovuto": true, "importoEuro": 18.0 } },
-    { "id": "SLOT-04", "strutturaId": "STR-02", "offsetGiorni": 20, "ora": "10:00", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
-    { "id": "SLOT-05", "strutturaId": "STR-03", "offsetGiorni": 3, "ora": "08:45", "ticket": { "dovuto": true, "importoEuro": 22.5 } },
-    { "id": "SLOT-06", "strutturaId": "STR-03", "offsetGiorni": 12, "ora": "16:30", "ticket": { "dovuto": false, "motivo": "Esente per patologia dichiarata" } },
-    { "id": "SLOT-07", "strutturaId": "STR-04", "offsetGiorni": 7, "ora": "09:00", "ticket": { "dovuto": true, "importoEuro": 18.0 } }
+    { "id": "sl1", "strutturaId": "s3", "offsetGiorni": 2,  "ora": "09:15", "branca": "Ortopedia",  "ticket": { "dovuto": true, "importoEuro": 18 } },
+    { "id": "sl2", "strutturaId": "s1", "offsetGiorni": 3,  "ora": "10:30", "branca": "Ortopedia",  "ticket": { "dovuto": true, "importoEuro": 18 } },
+    { "id": "sl3", "strutturaId": "s2", "offsetGiorni": 5,  "ora": "14:00", "branca": "Ortopedia",  "ticket": { "dovuto": false, "motivo": "Esenzione per patologia (027)" } },
+    { "id": "sl4", "strutturaId": "s4", "offsetGiorni": 10, "ora": "11:00", "branca": "Ortopedia",  "ticket": { "dovuto": true, "importoEuro": 18 } },
+    { "id": "sl5", "strutturaId": "s1", "offsetGiorni": 45, "ora": "09:00", "branca": "Ortopedia",  "ticket": { "dovuto": true, "importoEuro": 18 } },
+    { "id": "sl6", "strutturaId": "s2", "offsetGiorni": 7,  "ora": "16:30", "branca": "Cardiologia", "ticket": { "dovuto": true, "importoEuro": 22 } },
+    { "id": "sl7", "strutturaId": "s1", "offsetGiorni": 4,  "ora": "08:30", "branca": "Neurologia", "ticket": { "dovuto": false, "motivo": "Esenzione per patologia (027)" } }
   ]
 }

@@ -8,6 +8,47 @@
 
 :root {
   color-scheme: light;
+
+  /*
+   * Riferimento visivo richiesto dall'utente: card arrotondate, bordi morbidi, spaziatura
+   * generosa (stile "riepilogo" iOS Salute). Applicato SOLO tramite override dei token già
+   * esposti da Bootstrap Italia (nessun componente reinventato, coerente con la regola
+   * "non si inventano componenti UI che Bootstrap Italia già fornisce" — CLAUDE.md).
+   */
+  --bs-border-radius: 1rem;
+  --bs-border-radius-lg: 1.25rem;
+  --bs-border-radius-sm: 0.75rem;
+  --bs-card-border-radius: 1rem;
+  --bs-it-card-border-radius: 1rem;
+  --bs-btn-border-radius: 0.75rem;
+  --bs-alert-border-radius: 1rem;
+  --bs-accordion-border-radius: 1rem;
+  --bs-accordion-inner-border-radius: calc(1rem - 1px);
+}
+
+/* Le sezioni hero e le card fluttuano sullo sfondo invece di toccare i bordi (rif. visivo
+   utente): margine laterale + angoli arrotondati + ombra morbida, niente di nuovo inventato. */
+.it-hero-wrapper,
+.card,
+.it-card {
+  border-radius: var(--bs-border-radius-lg) !important;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-inline: 0;
+}
+
+.it-card.border {
+  border-color: var(--bs-border-color, #dee2e6) !important;
+}
+
+/* `.card-body` arriva senza padding in questa build di Bootstrap Italia/design-react-kit:
+   il testo tocca il bordo arrotondato. Fix di token, non un componente nuovo. */
+.card-body {
+  padding: 1.25rem !important;
+}
+
+.it-hero-text-wrapper {
+  border-radius: inherit;
 }
 
 /* AC-08.2 / ux-spec §3: corpo del testo >= 18px, override dei token, non !important sparsi. */

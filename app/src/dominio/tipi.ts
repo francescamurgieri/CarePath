@@ -140,7 +140,12 @@ export interface LetturaRicetta {
 // 3.4 — Passaggio 3: conferma della persona (S-04 → S-06)
 // ---------------------------------------------------------------------------------------
 
-declare const marchioConferma: unique symbol;
+/**
+ * Simbolo di marchiatura, esportato SOLO perché `confermaLettura()` (src/dominio/
+ * confermaLettura.ts) deve poterlo scrivere: nessun altro file ne ha bisogno, e nessun altro
+ * file deve costruire un `RicettaConfermata` a mano (niente `as RicettaConfermata`).
+ */
+export const marchioConferma: unique symbol = Symbol('carepath:ricettaConfermata');
 
 /**
  * Tipo opaco. L'UNICO costruttore è `confermaLettura()` (src/dominio/confermaLettura.ts).

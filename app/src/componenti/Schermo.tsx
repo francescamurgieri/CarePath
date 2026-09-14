@@ -24,8 +24,8 @@ export function Schermo({ titolo, children }: SchermoProps) {
   }, [titolo]);
 
   return (
-    <div>
-      <h1 ref={titoloRef} tabIndex={-1}>
+    <div className="container py-4 py-md-5" style={{ maxWidth: 720 }}>
+      <h1 ref={titoloRef} tabIndex={-1} className="h3 mb-4">
         {titolo}
       </h1>
       {children}

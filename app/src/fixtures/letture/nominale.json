@@ -1,0 +1,24 @@
+{
+  "_nota": "Fixture di test automation (ADR-0004): parole OCR e barcode sintetici che riproducono la ricetta di intake (VISITA ORTOPEDICA DI CONTROLLO, NRE 010A2+4518061015, priorità D). Import consentito solo da file *.test.ts.",
+  "dimensioni": { "larghezzaPx": 1000, "altezzaPx": 1400 },
+  "barcodes": [
+    { "formato": "CODE_39", "testo": "010A2", "riquadro": { "x": 0.1, "y": 0.05, "larghezza": 0.2, "altezza": 0.03 } },
+    { "formato": "CODE_39", "testo": "4518061015", "riquadro": { "x": 0.4, "y": 0.05, "larghezza": 0.3, "altezza": 0.03 } }
+  ],
+  "parole": [
+    { "testo": "VISITA", "confidenza": 0.95, "riquadro": { "x": 0.1, "y": 0.2, "larghezza": 0.1, "altezza": 0.02 } },
+    { "testo": "ORTOPEDICA", "confidenza": 0.93, "riquadro": { "x": 0.2, "y": 0.201, "larghezza": 0.15, "altezza": 0.02 } },
+    { "testo": "DI", "confidenza": 0.96, "riquadro": { "x": 0.35, "y": 0.199, "larghezza": 0.03, "altezza": 0.02 } },
+    { "testo": "CONTROLLO", "confidenza": 0.94, "riquadro": { "x": 0.38, "y": 0.2, "larghezza": 0.15, "altezza": 0.02 } },
+    { "testo": "—", "confidenza": 0.9, "riquadro": { "x": 0.53, "y": 0.2, "larghezza": 0.02, "altezza": 0.02 } },
+    { "testo": "89.01.G", "confidenza": 0.9, "riquadro": { "x": 0.55, "y": 0.2, "larghezza": 0.1, "altezza": 0.02 } },
+    { "testo": "PRIORITÀ", "confidenza": 0.92, "riquadro": { "x": 0.1, "y": 0.4, "larghezza": 0.12, "altezza": 0.02 } },
+    { "testo": "PRESCRIZIONE", "confidenza": 0.9, "riquadro": { "x": 0.22, "y": 0.401, "larghezza": 0.15, "altezza": 0.02 } },
+    { "testo": "(U,B,D,P)", "confidenza": 0.88, "riquadro": { "x": 0.37, "y": 0.4, "larghezza": 0.1, "altezza": 0.02 } },
+    { "testo": "D", "confidenza": 0.91, "riquadro": { "x": 0.48, "y": 0.4, "larghezza": 0.02, "altezza": 0.02 } },
+    { "testo": "ASL", "confidenza": 0.89, "riquadro": { "x": 0.1, "y": 0.5, "larghezza": 0.05, "altezza": 0.02 } },
+    { "testo": "TO3", "confidenza": 0.87, "riquadro": { "x": 0.16, "y": 0.5, "larghezza": 0.05, "altezza": 0.02 } },
+    { "testo": "ESENZIONE", "confidenza": 0.86, "riquadro": { "x": 0.1, "y": 0.6, "larghezza": 0.1, "altezza": 0.02 } },
+    { "testo": "L01", "confidenza": 0.9, "riquadro": { "x": 0.21, "y": 0.6, "larghezza": 0.05, "altezza": 0.02 } }
+  ]
+}
